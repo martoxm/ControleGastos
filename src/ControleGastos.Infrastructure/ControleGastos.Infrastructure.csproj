@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ControleGastos.Domain\ControleGastos.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
