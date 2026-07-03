@@ -8,12 +8,12 @@ namespace ControleGastos.Domain.Interfaces
     /// </summary>
     public interface ITransacaoRepository
     {
-        Task AdicionarAsync(Transacao transacao);
+        Task AdicionarAsync(Transacao transacao, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Transacao>> ListarTodasAsync();
+        Task<IEnumerable<Transacao>> ListarTodasAsync(CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Transacao>> ObterPorPessoaIdAsync(Guid pessoaId);
+        Task<IEnumerable<Transacao>> ObterPorPessoaIdAsync(Guid pessoaId, CancellationToken cancellationToken = default);
 
-        Task DeletarTransacoesDeUmaPessoaAsync(Guid pessoaId);
+        Task DeletarTransacoesDeUmaPessoaAsync(Guid pessoaId, CancellationToken cancellationToken = default);
     }
 }
