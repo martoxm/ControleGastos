@@ -4,39 +4,47 @@ using ControleGastos.Domain.Interfaces;
 
 namespace ControleGastos.Application.Services
 {
+    /// <summary>
+    /// Serviço de aplicação responsável por orquestrar os casos de uso relacionados à entidade Transacao.
+    /// Centraliza validações de aplicação e mantém os controllers mais enxutos.
+    /// </summary>
     public class TransacaoAppService(ITransacaoRepository transacaoRepository, IPessoaRepository pessoaRepository)
     {
         private readonly ITransacaoRepository _transacaoRepository = transacaoRepository;
         private readonly IPessoaRepository _pessoaRepository = pessoaRepository;
 
-        public async Task<TransacaoExibicaoDto> CriarAsync(TransacaoCadastroDto dto)
+        public async Task<TransacaoExibicaoDto> CriarAsync(TransacaoCadastroDto dto, CancellationToken cancellationToken = default)
         {
-            // REGRA DE NEGÓCIO EXIGIDA: O identificador da pessoa informada precisa existir no cadastro
-            var pessoa = await _pessoaRepository.ObterPorIdAsync(dto.PessoaId);
-            if (pessoa != null)
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto), "Os dados da transação são obrigatórios.");
+
+            // REGRA DE NEGÓCIO EXIGIDA:
+            // O identificador da pessoa informada precisa existir no cadastro antes da criação da transação.
+            var pessoa = await _pessoaRepository.ObterPorIdAsync(dto.PessoaId, cancellationToken) ?? throw new ArgumentException("A pessoa informada para a transação não foi localizada no sistema.");
+
+            // O construtor da entidade Transacao valida internamente:
+            // - descrição obrigatória
+            // - valor maior que zero
+            // - tipo válido
+            // - bloqueio de Receita para menores de idade
+            var novaTransacao = new Transacao(dto.Descricao, dto.Valor, dto.Tipo, pessoa);
+
+            await _transacaoRepository.AdicionarAsync(novaTransacao, cancellationToken);
+
+            return new TransacaoExibicaoDto
             {
-                // O construtor interno da classe Transacao validará automaticamente se a pessoa é menor de idade
-                // e se está tentando cadastrar uma Receita indevidamente, gerando erro de domínio se violado.
-                var novaTransacao = new Transacao(dto.Descricao, dto.Valor, dto.Tipo, pessoa);
-
-                await _transacaoRepository.AdicionarAsync(novaTransacao);
-
-                return new TransacaoExibicaoDto
-                {
-                    Id = novaTransacao.Id,
-                    Descricao = novaTransacao.Descricao,
-                    Valor = novaTransacao.Valor,
-                    Tipo = novaTransacao.Tipo.ToString(),
-                    PessoaId = novaTransacao.PessoaId
-                };
-            }
-
-            throw new ArgumentException("A pessoa informada para a transação não foi localizada no sistema.");
+                Id = novaTransacao.Id,
+                Descricao = novaTransacao.Descricao,
+                Valor = novaTransacao.Valor,
+                Tipo = novaTransacao.Tipo.ToString(),
+                PessoaId = novaTransacao.PessoaId
+            };
         }
 
-        public async Task<IEnumerable<TransacaoExibicaoDto>> ListarTodasAsync()
+        public async Task<IEnumerable<TransacaoExibicaoDto>> ListarTodasAsync(CancellationToken cancellationToken = default)
         {
-            var transacoes = await _transacaoRepository.ListarTodasAsync();
+            var transacoes = await _transacaoRepository.ListarTodasAsync(cancellationToken);
+
             return transacoes.Select(t => new TransacaoExibicaoDto
             {
                 Id = t.Id,
