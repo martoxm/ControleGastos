@@ -1,8 +1,8 @@
 ﻿namespace ControleGastos.Domain.Enums
 {
     /// <summary>
-    /// Enum para definir explicitamente o tipo da transação financeira.
-    /// Mantém o mapeamento limpo e legível.
+    /// Enum responsável por definir explicitamente o tipo da transação financeira.
+    /// Mantém o código mais legível e evita o uso de valores mágicos.
     /// </summary>
     public enum TipoTransacao
     {
