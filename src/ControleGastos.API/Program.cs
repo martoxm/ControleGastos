@@ -3,30 +3,60 @@ using ControleGastos.Domain.Interfaces;
 using ControleGastos.Infrastructure.Context;
 using ControleGastos.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
+
+
+// =============================================================
+// Ponto de entrada da aplicação — configura serviços e pipeline
+// =============================================================
 
 var builder = WebApplication.CreateBuilder(args);
 
+// ---------------------------------------------------------------
+// Banco de dados — SQLite via connection string do appsettings.json
+// Lança exceção clara se a connection string não estiver configurada
+// ---------------------------------------------------------------
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("A connection string 'DefaultConnection' não foi encontrada.");
 
-// Banco de dados SQLite
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlite(connectionString));
 
-// Repositórios
+// ---------------------------------------------------------------
+// Repositórios — Scoped: uma instância por requisição HTTP
+// Seguindo o princípio de inversão de dependência (DIP do SOLID)
+// ---------------------------------------------------------------
 builder.Services.AddScoped<IPessoaRepository, PessoaRepository>();
 builder.Services.AddScoped<ITransacaoRepository, TransacaoRepository>();
 
-// Serviços da aplicação
+// ---------------------------------------------------------------
+// Serviços da camada de aplicação — orquestram as regras de negócio
+// ---------------------------------------------------------------
 builder.Services.AddScoped<PessoaAppService>();
 builder.Services.AddScoped<TransacaoAppService>();
 
-// Controllers e Swagger
+// ---------------------------------------------------------------
+// Controllers — suporte a rotas e endpoints REST
+// ---------------------------------------------------------------
 builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
 
-// CORS para o frontend React
+// ---------------------------------------------------------------
+// Swagger — documentação interativa da API
+// ---------------------------------------------------------------
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "ControleGastos API",
+        Version = "v1",
+        Description = "API para gerenciamento de pessoas e transações financeiras."
+    });
+});
+
+// ---------------------------------------------------------------
+// CORS — permite requisições do frontend React em desenvolvimento
+// ---------------------------------------------------------------
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowReact", policy =>
@@ -40,21 +70,60 @@ builder.Services.AddCors(options =>
     });
 });
 
+// =============================================================
+// Build da aplicação e configuração do pipeline HTTP
+// =============================================================
 var app = builder.Build();
 
-// Aplica as migrations automaticamente ao iniciar
+// ---------------------------------------------------------------
+// Migrations automáticas — aplica pendências ao iniciar a aplicação
+// Garante que o banco esteja sempre atualizado sem intervenção manual
+// ---------------------------------------------------------------
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate();
 }
 
+// ---------------------------------------------------------------
+// Tratamento global de exceções não tratadas
+// Retorna status 500 com mensagem genérica sem expor detalhes internos
+// ---------------------------------------------------------------
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        context.Response.ContentType = "application/json";
+
+        await context.Response.WriteAsJsonAsync(new
+        {
+            erro = "Ocorreu um erro interno no servidor.",
+            status = 500
+        });
+    });
+});
+
+// ---------------------------------------------------------------
+// Swagger — disponível apenas em ambiente de desenvolvimento
+// ---------------------------------------------------------------
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "ControleGastos API v1");
+        options.RoutePrefix = string.Empty; // Swagger abre na raiz: http://localhost:{porta}/
+    });
 }
 
+// ---------------------------------------------------------------
+// Pipeline HTTP — ordem importa:
+// 1. HTTPS  → redireciona HTTP para HTTPS
+// 2. CORS   → antes de qualquer lógica de rota
+// 3. Auth   → autorização (preparado para expansão futura)
+// 4. Routes → mapeia os controllers
+// ---------------------------------------------------------------
 app.UseHttpsRedirection();
 app.UseCors("AllowReact");
 app.UseAuthorization();
