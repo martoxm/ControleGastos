@@ -1,4 +1,5 @@
 using ControleGastos.Application.Services;
+using ControleGastos.Domain.Exceptions;
 using ControleGastos.Domain.Interfaces;
 using ControleGastos.Infrastructure.Context;
 using ControleGastos.Infrastructure.Repositories;
@@ -86,14 +87,32 @@ using (var scope = app.Services.CreateScope())
 
 // ---------------------------------------------------------------
 // Tratamento global de exceções não tratadas
-// Retorna status 500 com mensagem genérica sem expor detalhes internos
+// Retorna 400 para violações de regra de negócio e validação,
+// e 500 apenas para erros internos inesperados
 // ---------------------------------------------------------------
 app.UseExceptionHandler(errorApp =>
 {
     errorApp.Run(async context =>
     {
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
+        var exceptionFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
+        var exception = exceptionFeature?.Error;
+
         context.Response.ContentType = "application/json";
+
+        if (exception is RegraDeNegocioException || exception is ArgumentException)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+            await context.Response.WriteAsJsonAsync(new
+            {
+                erro = exception.Message,
+                status = 400
+            });
+
+            return;
+        }
+
+        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
         await context.Response.WriteAsJsonAsync(new
         {
