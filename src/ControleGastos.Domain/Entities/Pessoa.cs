@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ControleGastos.Domain.Entities
+﻿namespace ControleGastos.Domain.Entities
 {
     /// <summary>
     /// Entidade que representa uma Pessoa no sistema.
