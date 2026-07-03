@@ -9,8 +9,15 @@
         // Identificador único gerado automaticamente
         public Guid Id { get; private set; }
 
-        public string Nome { get; private set; }
+        public string? Nome { get; private set; }
         public int Idade { get; private set; }
+
+        /// <summary>
+        /// Construtor privado exigido pelo Entity Framework para materialização da entidade.
+        /// </summary>
+        private Pessoa()
+        {
+        }
 
         public Pessoa(string nome, int idade)
         {
@@ -21,7 +28,23 @@
                 throw new ArgumentException("A idade não pode ser um valor negativo.");
 
             Id = Guid.NewGuid();
-            Nome = nome;
+            Nome = nome.Trim();
+            Idade = idade;
+        }
+
+        /// <summary>
+        /// Atualiza os dados básicos da pessoa de forma controlada pela própria entidade.
+        /// Mantém as validações de domínio sem expor setters públicos.
+        /// </summary>
+        public void AtualizarDados(string nome, int idade)
+        {
+            if (string.IsNullOrWhiteSpace(nome))
+                throw new ArgumentException("O nome não pode ser vazio ou nulo.");
+
+            if (idade < 0)
+                throw new ArgumentException("A idade não pode ser um valor negativo.");
+
+            Nome = nome.Trim();
             Idade = idade;
         }
 
