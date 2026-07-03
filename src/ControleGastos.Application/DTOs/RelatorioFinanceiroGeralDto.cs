@@ -1,7 +1,8 @@
 ﻿namespace ControleGastos.Application.DTOs
 {
     /// <summary>
-    /// DTO mestre usado para responder à tela de "Consulta de Totais" contendo a lista e o rodapé geral.
+    /// DTO mestre usado para responder à tela de consulta de totais,
+    /// contendo a lista por pessoa e o consolidado geral.
     /// </summary>
     public class RelatorioFinanceiroGeralDto
     {
