@@ -8,12 +8,12 @@ namespace ControleGastos.Domain.Interfaces
     /// </summary>
     public interface IPessoaRepository
     {
-        Task AdicionarAsync(Pessoa pessoa);
+        Task AdicionarAsync(Pessoa pessoa, CancellationToken cancellationToken = default);
 
-        Task DeletarAsync(Guid id);
+        Task DeletarAsync(Guid id, CancellationToken cancellationToken = default);
 
-        Task<Pessoa?> ObterPorIdAsync(Guid id);
+        Task<Pessoa?> ObterPorIdAsync(Guid id, CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Pessoa>> ListarTodasAsync();
+        Task<IEnumerable<Pessoa>> ListarTodasAsync(CancellationToken cancellationToken = default);
     }
 }
