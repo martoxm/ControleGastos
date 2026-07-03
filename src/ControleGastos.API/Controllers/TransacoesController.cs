@@ -11,24 +11,16 @@ namespace ControleGastos.API.Controllers
         private readonly TransacaoAppService _transacaoAppService = transacaoAppService;
 
         [HttpPost]
-        public async Task<IActionResult> Criar([FromBody] TransacaoCadastroDto dto)
+        public async Task<IActionResult> Criar([FromBody] TransacaoCadastroDto dto, CancellationToken cancellationToken)
         {
-            try
-            {
-                var resultado = await _transacaoAppService.CriarAsync(dto);
-                return Ok(resultado);
-            }
-            catch (Exception ex) when (ex is ArgumentException || ex is InvalidOperationException)
-            {
-                // Captura as validações de domínio (ex: menor de idade tentando colocar receita)
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            var resultado = await _transacaoAppService.CriarAsync(dto, cancellationToken);
+            return Created($"{Request.Path}/{resultado.Id}", resultado);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Listar()
+        public async Task<IActionResult> Listar(CancellationToken cancellationToken)
         {
-            var transacoes = await _transacaoAppService.ListarTodasAsync();
+            var transacoes = await _transacaoAppService.ListarTodasAsync(cancellationToken);
             return Ok(transacoes);
         }
     }
