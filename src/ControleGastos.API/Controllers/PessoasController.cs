@@ -1,8 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using ControleGastos.Application.DTOs;
+﻿using ControleGastos.Application.DTOs;
 using ControleGastos.Application.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ControleGastos.API.Controllers
 {
@@ -13,38 +11,32 @@ namespace ControleGastos.API.Controllers
         private readonly PessoaAppService _pessoaAppService = pessoaAppService;
 
         [HttpPost]
-        public async Task<IActionResult> Criar([FromBody] PessoaCadastroDto dto)
+        public async Task<IActionResult> Criar([FromBody] PessoaCadastroDto dto, CancellationToken cancellationToken)
         {
-            try
-            {
-                var resultado = await _pessoaAppService.CriarAsync(dto);
-                return CreatedAtAction(nameof(Listar), new { id = resultado.Id }, resultado);
-            }
-            catch (ArgumentException ex)
-            {
-                return BadRequest(new { mensagem = ex.Message });
-            }
+            var resultado = await _pessoaAppService.CriarAsync(dto, cancellationToken);
+
+            return Created($"{Request.Path}/{resultado.Id}", resultado);
         }
 
         [HttpGet]
-        public async Task<IActionResult> Listar()
+        public async Task<IActionResult> Listar(CancellationToken cancellationToken)
         {
-            var pessoas = await _pessoaAppService.ListarTodasAsync();
+            var pessoas = await _pessoaAppService.ListarTodasAsync(cancellationToken);
             return Ok(pessoas);
         }
 
         [HttpDelete("{id:guid}")]
-        public async Task<IActionResult> Deletar(Guid id)
+        public async Task<IActionResult> Deletar(Guid id, CancellationToken cancellationToken)
         {
-            await _pessoaAppService.DeletarAsync(id);
+            await _pessoaAppService.DeletarAsync(id, cancellationToken);
             return NoContent();
         }
 
-        // ROTA EXIGIDA: Consulta de Totais consolidados
+        // ROTA EXIGIDA: Consulta de totais consolidados
         [HttpGet("totais")]
-        public async Task<IActionResult> ObterTotais()
+        public async Task<IActionResult> ObterTotais(CancellationToken cancellationToken)
         {
-            var relatorio = await _pessoaAppService.ObterConsultaDeTotaisAsync();
+            var relatorio = await _pessoaAppService.ObterConsultaDeTotaisAsync(cancellationToken);
             return Ok(relatorio);
         }
     }
