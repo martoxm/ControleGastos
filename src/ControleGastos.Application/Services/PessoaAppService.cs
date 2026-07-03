@@ -5,15 +5,22 @@ using ControleGastos.Domain.Interfaces;
 
 namespace ControleGastos.Application.Services
 {
+    /// <summary>
+    /// Serviço de aplicação responsável por orquestrar os casos de uso relacionados à entidade Pessoa.
+    /// Mantém controllers mais finos e centraliza a lógica de aplicação.
+    /// </summary>
     public class PessoaAppService(IPessoaRepository pessoaRepository, ITransacaoRepository transacaoRepository)
     {
         private readonly IPessoaRepository _pessoaRepository = pessoaRepository;
         private readonly ITransacaoRepository _transacaoRepository = transacaoRepository;
 
-        public async Task<PessoaExibicaoDto> CriarAsync(PessoaCadastroDto dto)
+        public async Task<PessoaExibicaoDto> CriarAsync(PessoaCadastroDto dto, CancellationToken cancellationToken = default)
         {
+            if (dto == null)
+                throw new ArgumentNullException(nameof(dto), "Os dados da pessoa são obrigatórios.");
+
             var novaPessoa = new Pessoa(dto.Nome, dto.Idade);
-            await _pessoaRepository.AdicionarAsync(novaPessoa);
+            await _pessoaRepository.AdicionarAsync(novaPessoa, cancellationToken);
 
             return new PessoaExibicaoDto
             {
@@ -23,16 +30,20 @@ namespace ControleGastos.Application.Services
             };
         }
 
-        public async Task DeletarAsync(Guid id)
+        public async Task DeletarAsync(Guid id, CancellationToken cancellationToken = default)
         {
-            // REGRA DE NEGÓCIO EXIGIDA: Deletar pessoa apaga todas as transações vinculadas
-            await _transacaoRepository.DeletarTransacoesDeUmaPessoaAsync(id);
-            await _pessoaRepository.DeletarAsync(id);
+            // REGRA DE NEGÓCIO EXIGIDA:
+            // Ao deletar uma pessoa, todas as transações vinculadas a ela também devem ser apagadas.
+            // O banco já está configurado com exclusão em cascata, mas manter este fluxo explícito
+            // deixa a regra mais visível na camada de aplicação e facilita a explicação do projeto.
+            await _transacaoRepository.DeletarTransacoesDeUmaPessoaAsync(id, cancellationToken);
+            await _pessoaRepository.DeletarAsync(id, cancellationToken);
         }
 
-        public async Task<IEnumerable<PessoaExibicaoDto>> ListarTodasAsync()
+        public async Task<IEnumerable<PessoaExibicaoDto>> ListarTodasAsync(CancellationToken cancellationToken = default)
         {
-            var pessoas = await _pessoaRepository.ListarTodasAsync();
+            var pessoas = await _pessoaRepository.ListarTodasAsync(cancellationToken);
+
             return pessoas.Select(p => new PessoaExibicaoDto
             {
                 Id = p.Id,
@@ -44,10 +55,10 @@ namespace ControleGastos.Application.Services
         /// <summary>
         /// Gera o relatório completo calculando os totais individuais e o consolidado geral do sistema.
         /// </summary>
-        public async Task<RelatorioFinanceiroGeralDto> ObterConsultaDeTotaisAsync()
+        public async Task<RelatorioFinanceiroGeralDto> ObterConsultaDeTotaisAsync(CancellationToken cancellationToken = default)
         {
-            var pessoas = await _pessoaRepository.ListarTodasAsync();
-            var transacoes = await _transacaoRepository.ListarTodasAsync();
+            var pessoas = await _pessoaRepository.ListarTodasAsync(cancellationToken);
+            var transacoes = await _transacaoRepository.ListarTodasAsync(cancellationToken);
 
             var listaTotaisPessoas = new List<TotalPorPessoaDto>();
 
@@ -55,8 +66,13 @@ namespace ControleGastos.Application.Services
             {
                 var transacoesDaPessoa = transacoes.Where(t => t.PessoaId == pessoa.Id).ToList();
 
-                var totalReceitas = transacoesDaPessoa.Where(t => t.Tipo == TipoTransacao.Receita).Sum(t => t.Valor);
-                var totalDespesas = transacoesDaPessoa.Where(t => t.Tipo == TipoTransacao.Despesa).Sum(t => t.Valor);
+                var totalReceitas = transacoesDaPessoa
+                    .Where(t => t.Tipo == TipoTransacao.Receita)
+                    .Sum(t => t.Valor);
+
+                var totalDespesas = transacoesDaPessoa
+                    .Where(t => t.Tipo == TipoTransacao.Despesa)
+                    .Sum(t => t.Valor);
 
                 listaTotaisPessoas.Add(new TotalPorPessoaDto
                 {
@@ -68,7 +84,8 @@ namespace ControleGastos.Application.Services
                 });
             }
 
-            // REGRA DE NEGÓCIO: Calcular o total geral acumulado de receitas, despesas e saldo líquido
+            // REGRA DE NEGÓCIO:
+            // Calcular o total geral acumulado de receitas, despesas e saldo líquido.
             var totalGeralReceitas = listaTotaisPessoas.Sum(p => p.TotalReceitas);
             var totalGeralDespesas = listaTotaisPessoas.Sum(p => p.TotalDespesas);
             var saldoLiquidoGeral = totalGeralReceitas - totalGeralDespesas;
