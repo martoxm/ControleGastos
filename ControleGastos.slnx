@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/frontend/" />
+  <Folder Name="/src/">
+    <Project Path="src/ControleGastos.API/ControleGastos.API.csproj" />
+  </Folder>
+</Solution>
