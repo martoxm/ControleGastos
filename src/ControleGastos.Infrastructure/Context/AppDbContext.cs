@@ -16,24 +16,43 @@ namespace ControleGastos.Infrastructure.Context
             // Mapeamento da entidade Pessoa
             modelBuilder.Entity<Pessoa>(entity =>
             {
+                entity.ToTable("Pessoas");
+
                 entity.HasKey(e => e.Id);
-                entity.Property(e => e.Nome).IsRequired();
-                entity.Property(e => e.Idade).IsRequired();
+
+                entity.Property(e => e.Nome)
+                      .IsRequired()
+                      .HasMaxLength(150);
+
+                entity.Property(e => e.Idade)
+                      .IsRequired();
             });
 
             // Mapeamento da entidade Transacao
             modelBuilder.Entity<Transacao>(entity =>
             {
-                entity.HasKey(e => e.Id);
-                entity.Property(e => e.Descricao).IsRequired();
-                entity.Property(e => e.Valor).HasConversion<double>().IsRequired(); // SQLite armazena decimais melhor como double
-                entity.Property(e => e.Tipo).IsRequired();
+                entity.ToTable("Transacoes");
 
-                // Configurando o relacionamento: Uma Transação pertence a uma Pessoa
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Descricao)
+                      .IsRequired()
+                      .HasMaxLength(200);
+
+                entity.Property(e => e.Valor)
+                      .HasPrecision(18, 2)
+                      .HasConversion<double>()
+                      .IsRequired(); // No SQLite, o suporte a decimal pode variar; por isso a conversão ajuda a evitar problemas de persistência neste teste.
+
+                entity.Property(e => e.Tipo)
+                      .IsRequired();
+
+                // Configurando o relacionamento: uma Transação pertence a uma Pessoa.
+                // Se a pessoa for removida, suas transações também serão excluídas.
                 entity.HasOne<Pessoa>()
                       .WithMany()
                       .HasForeignKey(e => e.PessoaId)
-                      .OnDelete(DeleteBehavior.Cascade); // Se deletar a pessoa, o EF já ajuda a apagar as transações
+                      .OnDelete(DeleteBehavior.Cascade);
             });
 
             base.OnModelCreating(modelBuilder);

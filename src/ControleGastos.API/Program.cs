@@ -5,7 +5,6 @@ using ControleGastos.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
-
 // =============================================================
 // Ponto de entrada da aplicação — configura serviços e pipeline
 // =============================================================
