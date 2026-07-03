@@ -31,23 +31,53 @@ namespace ControleGastos.Domain.Entities
             if (pessoa == null)
                 throw new ArgumentNullException(nameof(pessoa), "A transação precisa estar vinculada a uma pessoa existente.");
 
+            ValidarDados(descricao, valor, tipo, pessoa);
+
+            Id = Guid.NewGuid();
+            Descricao = descricao.Trim();
+            Valor = valor;
+            Tipo = tipo;
+            PessoaId = pessoa.Id;
+        }
+
+        /// <summary>
+        /// Atualiza os dados principais da transação de forma controlada pela entidade.
+        /// As validações de domínio são reaplicadas para manter a consistência da regra de negócio.
+        /// </summary>
+        public void AtualizarDados(string descricao, decimal valor, TipoTransacao tipo, Pessoa pessoa)
+        {
+            if (pessoa == null)
+                throw new ArgumentNullException(nameof(pessoa), "A transação precisa estar vinculada a uma pessoa existente.");
+
+            ValidarDados(descricao, valor, tipo, pessoa);
+
+            Descricao = descricao.Trim();
+            Valor = valor;
+            Tipo = tipo;
+            PessoaId = pessoa.Id;
+        }
+
+        /// <summary>
+        /// Centraliza as validações da transação para evitar repetição entre criação e atualização.
+        /// </summary>
+        private static void ValidarDados(string descricao, decimal valor, TipoTransacao tipo, Pessoa pessoa)
+        {
             if (string.IsNullOrWhiteSpace(descricao))
                 throw new ArgumentException("A descrição da transação é obrigatória.");
 
             if (valor <= 0)
                 throw new ArgumentException("O valor da transação deve ser maior que zero.");
 
-            // REGRA DE NEGÓCIO: Se for menor de idade (menor de 18 anos), apenas despesas são permitidas
+            if (!Enum.IsDefined(tipo))
+                throw new ArgumentException("O tipo da transação informado é inválido.");
+
+            // REGRA DE NEGÓCIO:
+            // Se a pessoa for menor de idade (menos de 18 anos),
+            // apenas transações do tipo Despesa podem ser cadastradas.
             if (pessoa.EhMenorDeIdade() && tipo == TipoTransacao.Receita)
             {
                 throw new InvalidOperationException("Menores de 18 anos só podem cadastrar transações do tipo Despesa.");
             }
-
-            Id = Guid.NewGuid();
-            Descricao = descricao;
-            Valor = valor;
-            Tipo = tipo;
-            PessoaId = pessoa.Id;
         }
     }
-}
+} 
