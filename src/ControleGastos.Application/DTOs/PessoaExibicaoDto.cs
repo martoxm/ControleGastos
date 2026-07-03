@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ControleGastos.Application.DTOs
+﻿namespace ControleGastos.Application.DTOs
 {
     /// <summary>
     /// DTO focado estritamente no retorno de dados básicos de pessoas cadastradas.

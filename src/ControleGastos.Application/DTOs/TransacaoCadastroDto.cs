@@ -1,5 +1,4 @@
-﻿using System;
-using ControleGastos.Domain.Enums;
+﻿using ControleGastos.Domain.Enums;
 
 namespace ControleGastos.Application.DTOs
 {
