@@ -1,4 +1,5 @@
 ﻿using ControleGastos.Domain.Enums;
+using ControleGastos.Domain.Exceptions;
 
 namespace ControleGastos.Domain.Entities
 {
@@ -76,8 +77,8 @@ namespace ControleGastos.Domain.Entities
             // apenas transações do tipo Despesa podem ser cadastradas.
             if (pessoa.EhMenorDeIdade() && tipo == TipoTransacao.Receita)
             {
-                throw new InvalidOperationException("Menores de 18 anos só podem cadastrar transações do tipo Despesa.");
+                throw new RegraDeNegocioException("Menores de 18 anos só podem cadastrar transações do tipo Despesa.");
             }
         }
     }
-} 
+}
