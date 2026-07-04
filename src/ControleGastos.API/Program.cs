@@ -76,6 +76,10 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API para gerenciamento de pessoas e transações financeiras."
     });
+
+    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+    options.IncludeXmlComments(xmlPath);
 });
 
 // ---------------------------------------------------------------
