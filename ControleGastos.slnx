@@ -1,9 +1,9 @@
 <Solution>
-  <Folder Name="/frontend/" />
-  <Folder Name="/src/">
-    <Project Path="src/ControleGastos.API/ControleGastos.API.csproj" />
-    <Project Path="src/ControleGastos.Application/ControleGastos.Application.csproj" />
-    <Project Path="src/ControleGastos.Domain/ControleGastos.Domain.csproj" />
-    <Project Path="src/ControleGastos.Infrastructure/ControleGastos.Infrastructure.csproj" />
+  <Folder Name="/backend/">
+    <Project Path="backend/ControleGastos.API/ControleGastos.API.csproj" />
+    <Project Path="backend/ControleGastos.Application/ControleGastos.Application.csproj" />
+    <Project Path="backend/ControleGastos.Domain/ControleGastos.Domain.csproj" />
+    <Project Path="backend/ControleGastos.Infrastructure/ControleGastos.Infrastructure.csproj" />
   </Folder>
+  <Folder Name="/frontend/" />
 </Solution>
