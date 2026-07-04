@@ -3,6 +3,7 @@ using ControleGastos.Domain.Exceptions;
 using ControleGastos.Domain.Interfaces;
 using ControleGastos.Infrastructure.Context;
 using ControleGastos.Infrastructure.Repositories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -39,6 +40,29 @@ builder.Services.AddScoped<TransacaoAppService>();
 // Controllers — suporte a rotas e endpoints REST
 // ---------------------------------------------------------------
 builder.Services.AddControllers();
+
+// ---------------------------------------------------------------
+// Personaliza o retorno padrão das validações automáticas do ASP.NET Core
+// Retorna apenas a primeira mensagem de erro encontrada,
+// deixando a resposta mais simples e objetiva para o cliente.
+// ---------------------------------------------------------------
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.InvalidModelStateResponseFactory = context =>
+    {
+        var primeiroErro = context.ModelState
+            .Where(x => x.Value?.Errors.Count > 0)
+            .SelectMany(x => x.Value!.Errors)
+            .Select(x => x.ErrorMessage)
+            .FirstOrDefault();
+
+        return new BadRequestObjectResult(new
+        {
+            erro = primeiroErro ?? "Dados inválidos informados.",
+            status = 400
+        });
+    };
+});
 
 // ---------------------------------------------------------------
 // Swagger — documentação interativa da API
