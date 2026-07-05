@@ -12,8 +12,6 @@ namespace ControleGastos.Domain.Interfaces
 
         Task<IEnumerable<Transacao>> ListarTodasAsync(CancellationToken cancellationToken = default);
 
-        Task<IEnumerable<Transacao>> ObterPorPessoaIdAsync(Guid pessoaId, CancellationToken cancellationToken = default);
-
         Task DeletarTransacoesDeUmaPessoaAsync(Guid pessoaId, CancellationToken cancellationToken = default);
     }
 }
