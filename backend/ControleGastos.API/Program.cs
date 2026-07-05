@@ -39,7 +39,12 @@ builder.Services.AddScoped<ITransacaoAppService, TransacaoAppService>();
 // ---------------------------------------------------------------
 // Controllers — suporte a rotas e endpoints REST
 // ---------------------------------------------------------------
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Exibe o nome do enum (ex: "Despesa") em vez do número (ex: 0)
+        options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+    });
 
 // ---------------------------------------------------------------
 // Personaliza o retorno padrão das validações automáticas do ASP.NET Core
