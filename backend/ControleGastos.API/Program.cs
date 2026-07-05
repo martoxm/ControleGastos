@@ -1,7 +1,7 @@
 using ControleGastos.Api.Extensions;
-using ControleGastos.Application.DTOs;
+using ControleGastos.API.Middlewares;
+using ControleGastos.Application.Interfaces;
 using ControleGastos.Application.Services;
-using ControleGastos.Domain.Exceptions;
 using ControleGastos.Domain.Interfaces;
 using ControleGastos.Infrastructure.Context;
 using ControleGastos.Infrastructure.Repositories;
@@ -33,8 +33,8 @@ builder.Services.AddScoped<ITransacaoRepository, TransacaoRepository>();
 // ---------------------------------------------------------------
 // Serviços da camada de aplicação — orquestram as regras de negócio
 // ---------------------------------------------------------------
-builder.Services.AddScoped<PessoaAppService>();
-builder.Services.AddScoped<TransacaoAppService>();
+builder.Services.AddScoped<IPessoaAppService, PessoaAppService>();
+builder.Services.AddScoped<ITransacaoAppService, TransacaoAppService>();
 
 // ---------------------------------------------------------------
 // Controllers — suporte a rotas e endpoints REST
@@ -102,37 +102,7 @@ using (var scope = app.Services.CreateScope())
 // Retorna 400 para violações de regra de negócio e validação,
 // e 500 apenas para erros internos inesperados
 // ---------------------------------------------------------------
-app.UseExceptionHandler(errorApp =>
-{
-    errorApp.Run(async context =>
-    {
-        var exceptionFeature = context.Features.Get<Microsoft.AspNetCore.Diagnostics.IExceptionHandlerPathFeature>();
-        var exception = exceptionFeature?.Error;
-
-        context.Response.ContentType = "application/json";
-
-        if (exception is RegraDeNegocioException || exception is ArgumentException)
-        {
-            context.Response.StatusCode = StatusCodes.Status400BadRequest;
-
-            await context.Response.WriteAsJsonAsync(new ResponseErrorDto
-            {
-                Erro = exception?.Message ?? "Dados inválidos informados.",
-                Status = 400
-            });
-
-            return;
-        }
-
-        context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-
-        await context.Response.WriteAsJsonAsync(new ResponseErrorDto
-        {
-            Erro = "Ocorreu um erro interno no servidor.",
-            Status = 500
-        });
-    });
-});
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // ---------------------------------------------------------------
 // Swagger — disponível apenas em ambiente de desenvolvimento

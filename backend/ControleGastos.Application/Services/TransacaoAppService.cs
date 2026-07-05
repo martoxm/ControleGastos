@@ -1,4 +1,5 @@
 ﻿using ControleGastos.Application.DTOs;
+using ControleGastos.Application.Interfaces;
 using ControleGastos.Domain.Entities;
 using ControleGastos.Domain.Interfaces;
 
@@ -9,6 +10,7 @@ namespace ControleGastos.Application.Services
     /// Centraliza validações de aplicação e mantém os controllers mais enxutos.
     /// </summary>
     public class TransacaoAppService(ITransacaoRepository transacaoRepository, IPessoaRepository pessoaRepository)
+    : ITransacaoAppService
     {
         private readonly ITransacaoRepository _transacaoRepository = transacaoRepository;
         private readonly IPessoaRepository _pessoaRepository = pessoaRepository;

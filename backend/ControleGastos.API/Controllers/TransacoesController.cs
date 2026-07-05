@@ -1,5 +1,5 @@
 ﻿using ControleGastos.Application.DTOs;
-using ControleGastos.Application.Services;
+using ControleGastos.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControleGastos.API.Controllers
@@ -7,9 +7,9 @@ namespace ControleGastos.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class TransacoesController(TransacaoAppService transacaoAppService) : ControllerBase
+    public class TransacoesController(ITransacaoAppService transacaoAppService) : ControllerBase
     {
-        private readonly TransacaoAppService _transacaoAppService = transacaoAppService;
+        private readonly ITransacaoAppService _transacaoAppService = transacaoAppService;
 
         /// <summary>
         /// Cadastra uma nova transação.

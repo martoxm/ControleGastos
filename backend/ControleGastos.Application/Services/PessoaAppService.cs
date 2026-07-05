@@ -1,4 +1,5 @@
 ﻿using ControleGastos.Application.DTOs;
+using ControleGastos.Application.Interfaces;
 using ControleGastos.Domain.Entities;
 using ControleGastos.Domain.Enums;
 using ControleGastos.Domain.Interfaces;
@@ -10,6 +11,7 @@ namespace ControleGastos.Application.Services
     /// Mantém controllers mais finos e centraliza a lógica de aplicação.
     /// </summary>
     public class PessoaAppService(IPessoaRepository pessoaRepository, ITransacaoRepository transacaoRepository)
+    : IPessoaAppService
     {
         private readonly IPessoaRepository _pessoaRepository = pessoaRepository;
         private readonly ITransacaoRepository _transacaoRepository = transacaoRepository;

@@ -1,5 +1,5 @@
 ﻿using ControleGastos.Application.DTOs;
-using ControleGastos.Application.Services;
+using ControleGastos.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControleGastos.API.Controllers
@@ -7,9 +7,9 @@ namespace ControleGastos.API.Controllers
     [ApiController]
     [Route("api/[controller]")]
     [Produces("application/json")]
-    public class PessoasController(PessoaAppService pessoaAppService) : ControllerBase
+    public class PessoasController(IPessoaAppService pessoaAppService) : ControllerBase
     {
-        private readonly PessoaAppService _pessoaAppService = pessoaAppService;
+        private readonly IPessoaAppService _pessoaAppService = pessoaAppService;
 
         /// <summary>
         /// Cadastra uma nova pessoa.
