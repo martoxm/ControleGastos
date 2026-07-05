@@ -69,42 +69,45 @@ namespace ControleGastos.Application.Services
             var pessoas = await _pessoaRepository.ListarTodasAsync(cancellationToken);
             var transacoes = await _transacaoRepository.ListarTodasAsync(cancellationToken);
 
-            var listaTotaisPessoas = new List<TotalPorPessoaDto>();
+            var listaTotaisPessoas = pessoas
+                .Select(p => CalcularTotalPorPessoa(p, transacoes))
+                .ToList();
 
-            foreach (var pessoa in pessoas)
+            return MontarRelatorioGeral(listaTotaisPessoas);
+        }
+
+        /// <summary>
+        /// Calcula receitas, despesas e saldo de uma pessoa específica.
+        /// </summary>
+        private static TotalPorPessoaDto CalcularTotalPorPessoa(Pessoa pessoa, IEnumerable<Transacao> transacoes)
+        {
+            var transacoesDaPessoa = transacoes.Where(t => t.PessoaId == pessoa.Id);
+
+            return new TotalPorPessoaDto
             {
-                var transacoesDaPessoa = transacoes.Where(t => t.PessoaId == pessoa.Id).ToList();
-
-                var totalReceitas = transacoesDaPessoa
+                PessoaId = pessoa.Id,
+                Nome = pessoa.Nome,
+                Idade = pessoa.Idade,
+                TotalReceitas = transacoesDaPessoa
                     .Where(t => t.Tipo == TipoTransacao.Receita)
-                    .Sum(t => t.Valor);
-
-                var totalDespesas = transacoesDaPessoa
+                    .Sum(t => t.Valor),
+                TotalDespesas = transacoesDaPessoa
                     .Where(t => t.Tipo == TipoTransacao.Despesa)
-                    .Sum(t => t.Valor);
+                    .Sum(t => t.Valor)
+            };
+        }
 
-                listaTotaisPessoas.Add(new TotalPorPessoaDto
-                {
-                    PessoaId = pessoa.Id,
-                    Nome = pessoa.Nome,
-                    Idade = pessoa.Idade,
-                    TotalReceitas = totalReceitas,
-                    TotalDespesas = totalDespesas
-                });
-            }
-
-            // REGRA DE NEGÓCIO:
-            // Calcular o total geral acumulado de receitas, despesas e saldo líquido.
-            var totalGeralReceitas = listaTotaisPessoas.Sum(p => p.TotalReceitas);
-            var totalGeralDespesas = listaTotaisPessoas.Sum(p => p.TotalDespesas);
-            var saldoLiquidoGeral = totalGeralReceitas - totalGeralDespesas;
-
+        /// <summary>
+        /// Consolida os totais individuais no relatório geral do sistema.
+        /// </summary>
+        private static RelatorioFinanceiroGeralDto MontarRelatorioGeral(List<TotalPorPessoaDto> totaisPessoas)
+        {
             return new RelatorioFinanceiroGeralDto
             {
-                Pessoas = listaTotaisPessoas,
-                TotalGeralReceitas = totalGeralReceitas,
-                TotalGeralDespesas = totalGeralDespesas,
-                SaldoLiquidoGeral = saldoLiquidoGeral
+                Pessoas = totaisPessoas,
+                TotalGeralReceitas = totaisPessoas.Sum(p => p.TotalReceitas),
+                TotalGeralDespesas = totaisPessoas.Sum(p => p.TotalDespesas),
+                SaldoLiquidoGeral = totaisPessoas.Sum(p => p.Saldo)
             };
         }
     }

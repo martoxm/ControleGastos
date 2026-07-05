@@ -15,8 +15,6 @@ namespace ControleGastos.Infrastructure.Repositories
 
         public async Task AdicionarAsync(Pessoa pessoa, CancellationToken cancellationToken = default)
         {
-
-
             await _context.Pessoas.AddAsync(pessoa, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
         }
