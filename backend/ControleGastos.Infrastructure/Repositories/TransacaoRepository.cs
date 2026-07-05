@@ -24,13 +24,6 @@ namespace ControleGastos.Infrastructure.Repositories
             return await _context.Transacoes.ToListAsync(cancellationToken);
         }
 
-        public async Task<IEnumerable<Transacao>> ObterPorPessoaIdAsync(Guid pessoaId, CancellationToken cancellationToken = default)
-        {
-            return await _context.Transacoes
-                                 .Where(t => t.PessoaId == pessoaId)
-                                 .ToListAsync(cancellationToken);
-        }
-
         public async Task DeletarTransacoesDeUmaPessoaAsync(Guid pessoaId, CancellationToken cancellationToken = default)
         {
             // Regra do teste: ao apagar uma pessoa, suas transações também devem ser removidas.
