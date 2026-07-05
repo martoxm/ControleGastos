@@ -1,0 +1,212 @@
+/* Estilos globais da aplicação */
+/* Reset básico + layout da navbar e conteúdo principal */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+/* ── Navbar ─────────────────────────────────── */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #1a1a2e;
+  padding: 0 2rem;
+  height: 60px;
+}
+
+.navbar-brand span {
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.navbar-links {
+  display: flex;
+  list-style: none;
+  gap: 2rem;
+}
+
+.navbar-links a {
+  color: #ccc;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 0.3rem 0;
+  border-bottom: 2px solid transparent;
+  transition:
+    color 0.2s,
+    border-color 0.2s;
+}
+
+.navbar-links a:hover,
+.navbar-links a.active {
+  color: #fff;
+  border-bottom-color: #4ecca3;
+}
+
+/* ── Conteúdo principal ──────────────────────── */
+.main-content {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+/* ── Cards e seções ──────────────────────────── */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.card h2 {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  color: #1a1a2e;
+}
+
+/* ── Formulários ─────────────────────────────── */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #555;
+}
+
+.form-group input,
+.form-group select {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #4ecca3;
+}
+
+/* ── Botões ──────────────────────────────────── */
+.btn {
+  padding: 0.5rem 1.2rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn:hover {
+  opacity: 0.85;
+}
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background-color: #1a1a2e;
+  color: #fff;
+}
+.btn-danger {
+  background-color: #e74c3c;
+  color: #fff;
+}
+
+/* ── Tabelas ─────────────────────────────────── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+th {
+  text-align: left;
+  padding: 0.6rem 0.75rem;
+  background-color: #f0f0f0;
+  color: #555;
+  font-weight: 600;
+}
+
+td {
+  padding: 0.6rem 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* ── Mensagens de feedback ───────────────────── */
+.msg-erro {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+.msg-sucesso {
+  color: #27ae60;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
+}
+.msg-vazio {
+  color: #999;
+  text-align: center;
+  padding: 1rem;
+}
+
+/* ── Badge tipo transação ────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.badge-receita {
+  background-color: #d5f5e3;
+  color: #1e8449;
+}
+.badge-despesa {
+  background-color: #fde8e8;
+  color: #c0392b;
+}
+
+/* ── Totais financeiros ──────────────────────── */
+.valor-positivo {
+  color: #1e8449;
+  font-weight: 600;
+}
+.valor-negativo {
+  color: #c0392b;
+  font-weight: 600;
+}
+.valor-neutro {
+  color: #555;
+  font-weight: 600;
+}
+
+/* ── Linha de totais gerais ──────────────────── */
+.row-total-geral td {
+  background-color: #1a1a2e;
+  color: #fff;
+  font-weight: 700;
+  border-bottom: none;
+}
