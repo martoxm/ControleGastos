@@ -1,17 +1,16 @@
+using ControleGastos.Api.Extensions;
 using ControleGastos.Application.DTOs;
 using ControleGastos.Application.Services;
 using ControleGastos.Domain.Exceptions;
 using ControleGastos.Domain.Interfaces;
 using ControleGastos.Infrastructure.Context;
 using ControleGastos.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
 // =============================================================
 // Ponto de entrada da aplicação — configura serviços e pipeline
 // =============================================================
-
 var builder = WebApplication.CreateBuilder(args);
 
 // ---------------------------------------------------------------
@@ -47,28 +46,7 @@ builder.Services.AddControllers();
 // Retorna todas as mensagens de erro encontradas,
 // deixando a resposta mais simples e objetiva para o cliente.
 // ---------------------------------------------------------------
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.InvalidModelStateResponseFactory = context =>
-    {
-        var erros = context.ModelState
-            .Where(x => x.Value?.Errors.Count > 0)
-            .ToDictionary(
-                x => x.Key,
-                x => x.Value!.Errors
-                    .Select(e => e.ErrorMessage)
-                    .Where(m => !string.IsNullOrWhiteSpace(m))
-                    .ToArray()
-            );
-
-        return new BadRequestObjectResult(new ResponseErrorDto
-        {
-            Erro = "Existem campos inválidos na requisição.",
-            Status = 400,
-            Erros = erros
-        });
-    };
-});
+builder.Services.AddCustomApiBehavior();
 
 // ---------------------------------------------------------------
 // Swagger — documentação interativa da API
