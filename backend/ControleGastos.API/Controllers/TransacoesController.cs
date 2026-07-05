@@ -22,7 +22,7 @@ namespace ControleGastos.API.Controllers
         /// Pessoas menores de idade podem cadastrar apenas despesas.
         /// </remarks>
         /// <response code="201">Transação criada com sucesso.</response>
-        /// <response code="400">Dados inválidos para cadastro.</response>
+        /// <response code="400">Dados inválidos para cadastro. Pode retornar um ou mais campos com erro.</response>
         [HttpPost]
         [ProducesResponseType(typeof(TransacaoExibicaoDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErrorDto), StatusCodes.Status400BadRequest)]

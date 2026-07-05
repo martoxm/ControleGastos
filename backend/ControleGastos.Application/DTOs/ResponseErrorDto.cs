@@ -1,4 +1,6 @@
-﻿namespace ControleGastos.Application.DTOs
+﻿using System.Text.Json.Serialization;
+
+namespace ControleGastos.Application.DTOs
 {
     /// <summary>
     /// Representa uma resposta padronizada de erro da API.
@@ -14,5 +16,11 @@
         /// Código de status HTTP.
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// Erros detalhados por campo.
+        /// </summary>
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public Dictionary<string, string[]>? Erros { get; set; }
     }
 }

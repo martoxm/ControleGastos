@@ -44,23 +44,28 @@ builder.Services.AddControllers();
 
 // ---------------------------------------------------------------
 // Personaliza o retorno padrão das validações automáticas do ASP.NET Core
-// Retorna apenas a primeira mensagem de erro encontrada,
+// Retorna todas as mensagens de erro encontradas,
 // deixando a resposta mais simples e objetiva para o cliente.
 // ---------------------------------------------------------------
 builder.Services.Configure<ApiBehaviorOptions>(options =>
 {
     options.InvalidModelStateResponseFactory = context =>
     {
-        var primeiroErro = context.ModelState
+        var erros = context.ModelState
             .Where(x => x.Value?.Errors.Count > 0)
-            .SelectMany(x => x.Value!.Errors)
-            .Select(x => x.ErrorMessage)
-            .FirstOrDefault();
+            .ToDictionary(
+                x => x.Key,
+                x => x.Value!.Errors
+                    .Select(e => e.ErrorMessage)
+                    .Where(m => !string.IsNullOrWhiteSpace(m))
+                    .ToArray()
+            );
 
         return new BadRequestObjectResult(new ResponseErrorDto
         {
-            Erro = primeiroErro ?? "Dados inválidos informados.",
-            Status = 400
+            Erro = "Existem campos inválidos na requisição.",
+            Status = 400,
+            Erros = erros
         });
     };
 });
@@ -134,7 +139,7 @@ app.UseExceptionHandler(errorApp =>
 
             await context.Response.WriteAsJsonAsync(new ResponseErrorDto
             {
-                Erro = exception.Message,
+                Erro = exception?.Message ?? "Dados inválidos informados.",
                 Status = 400
             });
 

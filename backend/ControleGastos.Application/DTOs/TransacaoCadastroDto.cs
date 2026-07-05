@@ -12,6 +12,7 @@ namespace ControleGastos.Application.DTOs
         [StringLength(200, MinimumLength = 2, ErrorMessage = "A descrição deve ter entre 2 e 200 caracteres.")]
         public string Descricao { get; set; } = string.Empty;
 
+        [Range(0.01, double.MaxValue, ErrorMessage = "O valor deve ser maior que zero.")]
         public decimal Valor { get; set; }
 
         [Required(ErrorMessage = "O tipo da transação é obrigatório.")]

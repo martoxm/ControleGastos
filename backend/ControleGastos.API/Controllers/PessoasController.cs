@@ -18,7 +18,7 @@ namespace ControleGastos.API.Controllers
         /// <param name="cancellationToken"></param>
         /// <returns>Retorna a pessoa criada.</returns>
         /// <response code="201">Pessoa criada com sucesso.</response>
-        /// <response code="400">Dados inválidos para cadastro.</response>
+        /// <response code="400">Dados inválidos para cadastro. Pode retornar um ou mais campos com erro.</response>
         [HttpPost]
         [ProducesResponseType(typeof(PessoaExibicaoDto), StatusCodes.Status201Created)]
         [ProducesResponseType(typeof(ResponseErrorDto), StatusCodes.Status400BadRequest)]
