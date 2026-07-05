@@ -21,12 +21,15 @@ namespace ControleGastos.API.Controllers
         /// <response code="400">Dados inválidos para cadastro.</response>
         [HttpPost]
         [ProducesResponseType(typeof(PessoaExibicaoDto), StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ResponseErrorDto), StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Criar([FromBody] PessoaCadastroDto dto, CancellationToken cancellationToken)
         {
             var resultado = await _pessoaAppService.CriarAsync(dto, cancellationToken);
 
-            return Created($"{Request.Path}/{resultado.Id}", resultado);
+            return CreatedAtAction(
+                nameof(Listar),
+                new { id = resultado.Id },
+                resultado);
         }
 
         /// <summary>

@@ -1,3 +1,4 @@
+using ControleGastos.Application.DTOs;
 using ControleGastos.Application.Services;
 using ControleGastos.Domain.Exceptions;
 using ControleGastos.Domain.Interfaces;
@@ -56,10 +57,10 @@ builder.Services.Configure<ApiBehaviorOptions>(options =>
             .Select(x => x.ErrorMessage)
             .FirstOrDefault();
 
-        return new BadRequestObjectResult(new
+        return new BadRequestObjectResult(new ResponseErrorDto
         {
-            erro = primeiroErro ?? "Dados inválidos informados.",
-            status = 400
+            Erro = primeiroErro ?? "Dados inválidos informados.",
+            Status = 400
         });
     };
 });
@@ -131,10 +132,10 @@ app.UseExceptionHandler(errorApp =>
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
-            await context.Response.WriteAsJsonAsync(new
+            await context.Response.WriteAsJsonAsync(new ResponseErrorDto
             {
-                erro = exception.Message,
-                status = 400
+                Erro = exception.Message,
+                Status = 400
             });
 
             return;
@@ -142,10 +143,10 @@ app.UseExceptionHandler(errorApp =>
 
         context.Response.StatusCode = StatusCodes.Status500InternalServerError;
 
-        await context.Response.WriteAsJsonAsync(new
+        await context.Response.WriteAsJsonAsync(new ResponseErrorDto
         {
-            erro = "Ocorreu um erro interno no servidor.",
-            status = 500
+            Erro = "Ocorreu um erro interno no servidor.",
+            Status = 500
         });
     });
 });
