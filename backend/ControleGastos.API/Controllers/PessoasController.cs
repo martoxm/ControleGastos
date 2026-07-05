@@ -6,6 +6,7 @@ namespace ControleGastos.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Produces("application/json")]
     public class PessoasController(PessoaAppService pessoaAppService) : ControllerBase
     {
         private readonly PessoaAppService _pessoaAppService = pessoaAppService;
@@ -16,7 +17,11 @@ namespace ControleGastos.API.Controllers
         /// <param name="dto">Dados da pessoa a ser cadastrada.</param>
         /// <param name="cancellationToken"></param>
         /// <returns>Retorna a pessoa criada.</returns>
+        /// <response code="201">Pessoa criada com sucesso.</response>
+        /// <response code="400">Dados inválidos para cadastro.</response>
         [HttpPost]
+        [ProducesResponseType(typeof(PessoaExibicaoDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> Criar([FromBody] PessoaCadastroDto dto, CancellationToken cancellationToken)
         {
             var resultado = await _pessoaAppService.CriarAsync(dto, cancellationToken);
@@ -28,7 +33,9 @@ namespace ControleGastos.API.Controllers
         /// Lista todas as pessoas cadastradas.
         /// </summary>
         /// <returns>Retorna a lista de pessoas.</returns>
+        /// <response code="200">Lista de pessoas retornada com sucesso.</response>
         [HttpGet]
+        [ProducesResponseType(typeof(IEnumerable<PessoaExibicaoDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Listar(CancellationToken cancellationToken)
         {
             var pessoas = await _pessoaAppService.ListarTodasAsync(cancellationToken);
@@ -40,15 +47,23 @@ namespace ControleGastos.API.Controllers
         /// </summary>
         /// <param name="id">Identificador da pessoa.</param>
         /// <param name="cancellationToken"></param>
-        /// <returns>Retorna 204 quando a exclusão for realizada com sucesso.</returns>
+        /// <returns>Retorna a mensagem de exclusão.</returns>
         /// <remarks>
         /// Ao excluir uma pessoa, todas as transações vinculadas a ela também são removidas.
         /// </remarks>
+        /// <response code="200">Pessoa removida com sucesso.</response>
+        /// <response code="404">Pessoa não encontrada.</response>
         [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Deletar(Guid id, CancellationToken cancellationToken)
         {
-            await _pessoaAppService.DeletarAsync(id, cancellationToken);
-            return NoContent();
+            var removido = await _pessoaAppService.DeletarAsync(id, cancellationToken);
+
+            if (!removido)
+                return NotFound(new { mensagem = "Pessoa não encontrada." });
+
+            return Ok(new { mensagem = "Pessoa removida com sucesso." });
         }
 
         /// <summary>
@@ -57,7 +72,9 @@ namespace ControleGastos.API.Controllers
         /// <returns>
         /// Retorna receitas, despesas e saldo de cada pessoa, além do consolidado geral.
         /// </returns>
+        /// <response code="200">Relatório retornado com sucesso.</response>
         [HttpGet("totais")]
+        [ProducesResponseType(typeof(RelatorioFinanceiroGeralDto), StatusCodes.Status200OK)]
         public async Task<IActionResult> ObterTotais(CancellationToken cancellationToken)
         {
             var relatorio = await _pessoaAppService.ObterConsultaDeTotaisAsync(cancellationToken);
