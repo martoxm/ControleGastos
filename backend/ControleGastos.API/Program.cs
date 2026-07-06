@@ -3,7 +3,6 @@ using ControleGastos.API.Extensions;
 using ControleGastos.API.Middlewares;
 using ControleGastos.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi;
 
 // Ponto de entrada da aplicação — configura serviços e pipeline
 
@@ -23,35 +22,11 @@ builder.Services.AddCustomApiBehavior();
 
 // Swagger — documentação interativa da API
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Title = "ControleGastos API",
-        Version = "v1",
-        Description = "API para gerenciamento de pessoas e transações financeiras."
-    });
-
-    var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-    options.IncludeXmlComments(xmlPath);
-});
+builder.Services.AddSwagger();
 
 // CORS — permite requisições do frontend React em desenvolvimento
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowReact", policy =>
-    {
-        policy.WithOrigins(
-                "http://localhost:5173",
-                "https://localhost:5173"
-              )
-              .AllowAnyMethod()
-              .AllowAnyHeader();
-    });
-});
+builder.Services.AddCorsPolicy();
 
 // Build da aplicação e configuração do pipeline HTTP
 
@@ -74,22 +49,14 @@ app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 // Swagger — disponível apenas em ambiente de desenvolvimento
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(options =>
-    {
-        options.SwaggerEndpoint("/swagger/v1/swagger.json", "ControleGastos API v1");
-        options.RoutePrefix = string.Empty; // Swagger abre na raiz: http://localhost:{porta}/
-    });
-}
+app.UseSwaggerDev();
 
 // Pipeline HTTP — ordem importa:
 // 1. CORS   → antes de qualquer lógica de rota
 // 2. Auth   → autorização (preparado para expansão futura)
 // 3. Routes → mapeia os controllers
 
-app.UseCors("AllowReact");
+app.UseCorsPolicy();
 app.UseAuthorization();
 app.MapControllers();
 
