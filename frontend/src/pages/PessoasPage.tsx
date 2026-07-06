@@ -117,12 +117,15 @@ const PessoasPage = () => {
             <label htmlFor="idade">Idade</label>
             <input
               id="idade"
-              type="number"
+              type="text"
+              inputMode="numeric"
               placeholder="Idade"
               value={idade}
-              onChange={(e) => setIdade(e.target.value)}
-              min={0}
-              max={150}
+              onChange={(e) => {
+                const val = e.target.value
+                if (val === "" || /^\d+$/.test(val)) setIdade(val)
+              }}
+              maxLength={3}
             />
           </div>
 
