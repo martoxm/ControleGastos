@@ -1,5 +1,5 @@
 ﻿using ControleGastos.Application.DTOs;
-using ControleGastos.Application.Interfaces;
+using ControleGastos.Application.Intefaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControleGastos.API.Controllers

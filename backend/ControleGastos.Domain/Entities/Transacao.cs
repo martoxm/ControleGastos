@@ -42,23 +42,6 @@ namespace ControleGastos.Domain.Entities
         }
 
         /// <summary>
-        /// Atualiza os dados principais da transação de forma controlada pela entidade.
-        /// As validações de domínio são reaplicadas para manter a consistência da regra de negócio.
-        /// </summary>
-        public void AtualizarDados(string descricao, decimal valor, TipoTransacao tipo, Pessoa pessoa)
-        {
-            if (pessoa == null)
-                throw new ArgumentNullException(nameof(pessoa), "A transação precisa estar vinculada a uma pessoa existente.");
-
-            ValidarDados(descricao, valor, tipo, pessoa);
-
-            Descricao = descricao.Trim();
-            Valor = valor;
-            Tipo = tipo;
-            PessoaId = pessoa.Id;
-        }
-
-        /// <summary>
         /// Centraliza as validações da transação para evitar repetição entre criação e atualização.
         /// </summary>
         private static void ValidarDados(string descricao, decimal valor, TipoTransacao tipo, Pessoa pessoa)

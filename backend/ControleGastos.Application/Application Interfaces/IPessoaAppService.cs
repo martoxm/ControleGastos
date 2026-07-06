@@ -1,6 +1,6 @@
 ﻿using ControleGastos.Application.DTOs;
 
-namespace ControleGastos.Application.Interfaces;
+namespace ControleGastos.Application.Intefaces;
 
 /// <summary>
 /// Contrato da camada de aplicação para os casos de uso de Pessoa.
@@ -9,7 +9,10 @@ namespace ControleGastos.Application.Interfaces;
 public interface IPessoaAppService
 {
     Task<PessoaExibicaoDto> CriarAsync(PessoaCadastroDto dto, CancellationToken cancellationToken = default);
+
     Task<bool> DeletarAsync(Guid id, CancellationToken cancellationToken = default);
+
     Task<IEnumerable<PessoaExibicaoDto>> ListarTodasAsync(CancellationToken cancellationToken = default);
+
     Task<RelatorioFinanceiroGeralDto> ObterConsultaDeTotaisAsync(CancellationToken cancellationToken = default);
 }

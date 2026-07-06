@@ -9,5 +9,6 @@ namespace ControleGastos.Application.Interfaces;
 public interface ITransacaoAppService
 {
     Task<TransacaoExibicaoDto> CriarAsync(TransacaoCadastroDto dto, CancellationToken cancellationToken = default);
+
     Task<IEnumerable<TransacaoExibicaoDto>> ListarTodasAsync(CancellationToken cancellationToken = default);
 }

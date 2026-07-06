@@ -1,6 +1,7 @@
 ﻿using ControleGastos.Application.DTOs;
 using ControleGastos.Application.Interfaces;
 using ControleGastos.Domain.Entities;
+using ControleGastos.Domain.Exceptions;
 using ControleGastos.Domain.Interfaces;
 
 namespace ControleGastos.Application.Services
@@ -22,8 +23,7 @@ namespace ControleGastos.Application.Services
 
             // REGRA DE NEGÓCIO EXIGIDA:
             // O identificador da pessoa informada precisa existir no cadastro antes da criação da transação.
-            var pessoa = await _pessoaRepository.ObterPorIdAsync(dto.PessoaId, cancellationToken) ?? throw new ArgumentException("A pessoa informada para a transação não foi localizada no sistema.");
-
+            var pessoa = await _pessoaRepository.ObterPorIdAsync(dto.PessoaId, cancellationToken) ?? throw new RegraDeNegocioException("A pessoa informada para a transação não foi localizada no sistema.");
             // O construtor da entidade Transacao valida internamente:
             // - descrição obrigatória
             // - valor maior que zero

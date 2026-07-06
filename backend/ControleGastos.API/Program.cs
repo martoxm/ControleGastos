@@ -1,5 +1,6 @@
 using ControleGastos.Api.Extensions;
 using ControleGastos.API.Middlewares;
+using ControleGastos.Application.Intefaces;
 using ControleGastos.Application.Interfaces;
 using ControleGastos.Application.Services;
 using ControleGastos.Domain.Interfaces;

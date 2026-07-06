@@ -1,5 +1,5 @@
 ﻿using ControleGastos.Application.DTOs;
-using ControleGastos.Application.Interfaces;
+using ControleGastos.Application.Intefaces;
 using ControleGastos.Domain.Entities;
 using ControleGastos.Domain.Enums;
 using ControleGastos.Domain.Interfaces;
