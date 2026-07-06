@@ -1,8 +1,6 @@
 using ControleGastos.Api.Extensions;
 using ControleGastos.API.Extensions;
 using ControleGastos.API.Middlewares;
-using ControleGastos.Infrastructure.Context;
-using Microsoft.EntityFrameworkCore;
 
 // Ponto de entrada da aplicação — configura serviços e pipeline
 
@@ -33,13 +31,8 @@ builder.Services.AddCorsPolicy();
 var app = builder.Build();
 
 // Migrations automáticas — aplica pendências ao iniciar a aplicação
-// Garante que o banco esteja sempre atualizado sem intervenção manual
 
-using (var scope = app.Services.CreateScope())
-{
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    dbContext.Database.Migrate();
-}
+app.ApplyMigrations();
 
 // Tratamento global de exceções não tratadas
 // Retorna 400 para violações de regra de negócio e validação,
