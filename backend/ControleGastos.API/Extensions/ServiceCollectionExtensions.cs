@@ -13,13 +13,13 @@ public static class ServiceCollectionExtensions
             {
                 var erros = context.ModelState
                     .Where(x => x.Value?.Errors.Count > 0)
-                    .GroupBy(x => NormalizarChaveModelState(x.Key)) // 👈 agrupa chaves iguais
+                    .GroupBy(x => NormalizarChaveModelState(x.Key))
                     .ToDictionary(
                         g => g.Key,
                         g => g.SelectMany(x => x.Value!.Errors
                               .Select(e => NormalizarMensagemErro(e.ErrorMessage)))
                               .Where(m => !string.IsNullOrWhiteSpace(m))
-                              .Distinct() // 👈 evita mensagens duplicadas no mesmo grupo
+                              .Distinct()
                               .ToArray()
     );
 

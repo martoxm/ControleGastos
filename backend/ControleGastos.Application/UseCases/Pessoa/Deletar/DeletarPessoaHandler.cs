@@ -1,4 +1,5 @@
-﻿using ControleGastos.Domain.Interfaces;
+﻿using ControleGastos.Domain.Exceptions;
+using ControleGastos.Domain.Interfaces;
 
 namespace ControleGastos.Application.UseCases.Pessoa.Deletar;
 
@@ -11,12 +12,9 @@ public class DeletarPessoaHandler(IPessoaRepository pessoaRepository, ITransacao
     private readonly IPessoaRepository _pessoaRepository = pessoaRepository;
     private readonly ITransacaoRepository _transacaoRepository = transacaoRepository;
 
-    public async Task<bool> ExecuteAsync(Guid id, CancellationToken cancellationToken = default)
+    public async Task ExecuteAsync(Guid id, CancellationToken cancellationToken = default)
     {
-        var pessoa = await _pessoaRepository.ObterPorIdAsync(id, cancellationToken);
-
-        if (pessoa is null)
-            return false;
+        _ = await _pessoaRepository.ObterPorIdAsync(id, cancellationToken) ?? throw new NotFoundException("Pessoa não encontrada.");
 
         // REGRA DE NEGÓCIO EXIGIDA:
         // Ao deletar uma pessoa, todas as transações vinculadas a ela também devem ser apagadas.
@@ -24,7 +22,5 @@ public class DeletarPessoaHandler(IPessoaRepository pessoaRepository, ITransacao
         // deixa a regra mais visível na camada de aplicação e facilita a explicação do projeto.
         await _transacaoRepository.DeletarTransacoesDeUmaPessoaAsync(id, cancellationToken);
         await _pessoaRepository.DeletarAsync(id, cancellationToken);
-
-        return true;
     }
 }

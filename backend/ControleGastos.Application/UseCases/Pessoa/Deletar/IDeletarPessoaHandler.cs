@@ -2,9 +2,9 @@
 
 /// <summary>
 /// Contrato do caso de uso responsável por remover uma pessoa do sistema.
-/// Retorna false se a pessoa não for encontrada, true em caso de sucesso.
+/// Lança NotFoundException se a pessoa não for encontrada.
 /// </summary>
 public interface IDeletarPessoaHandler
 {
-    Task<bool> ExecuteAsync(Guid id, CancellationToken cancellationToken = default);
+    Task ExecuteAsync(Guid id, CancellationToken cancellationToken = default);
 }

@@ -27,6 +27,19 @@ public class ExceptionHandlerMiddleware(RequestDelegate next)
     {
         context.Response.ContentType = "application/json";
 
+        if (exception is NotFoundException)
+        {
+            context.Response.StatusCode = StatusCodes.Status404NotFound;
+
+            await context.Response.WriteAsJsonAsync(new ResponseErrorDto
+            {
+                Erro = exception.Message,
+                Status = 404
+            });
+
+            return;
+        }
+
         if (exception is RegraDeNegocioException || exception is ArgumentException)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;

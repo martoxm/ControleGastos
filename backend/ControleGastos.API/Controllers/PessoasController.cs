@@ -68,14 +68,10 @@ public class PessoasController(
     /// <response code="404">Pessoa não encontrada.</response>
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ResponseErrorDto), StatusCodes.Status404NotFound)]
     public async Task<IActionResult> Deletar(Guid id, CancellationToken cancellationToken)
     {
-        var removido = await _deletarHandler.ExecuteAsync(id, cancellationToken);
-
-        if (!removido)
-            return NotFound(new { mensagem = "Pessoa não encontrada." });
-
+        await _deletarHandler.ExecuteAsync(id, cancellationToken);
         return Ok(new { mensagem = "Pessoa removida com sucesso." });
     }
 
