@@ -13,13 +13,15 @@ public static class ServiceCollectionExtensions
             {
                 var erros = context.ModelState
                     .Where(x => x.Value?.Errors.Count > 0)
+                    .GroupBy(x => NormalizarChaveModelState(x.Key)) // 👈 agrupa chaves iguais
                     .ToDictionary(
-                        x => NormalizarChaveModelState(x.Key),
-                        x => x.Value!.Errors
-                            .Select(e => NormalizarMensagemErro(e.ErrorMessage))
-                            .Where(m => !string.IsNullOrWhiteSpace(m))
-                            .ToArray()
-                    );
+                        g => g.Key,
+                        g => g.SelectMany(x => x.Value!.Errors
+                              .Select(e => NormalizarMensagemErro(e.ErrorMessage)))
+                              .Where(m => !string.IsNullOrWhiteSpace(m))
+                              .Distinct() // 👈 evita mensagens duplicadas no mesmo grupo
+                              .ToArray()
+    );
 
                 return new BadRequestObjectResult(new ResponseErrorDto
                 {
@@ -35,10 +37,9 @@ public static class ServiceCollectionExtensions
 
     private static string NormalizarChaveModelState(string key)
     {
-        if (string.IsNullOrWhiteSpace(key))
-            return "CorpoDaRequisicao";
-
-        if (key == "dto")
+        if (string.IsNullOrWhiteSpace(key)
+            || key.Equals("dto", StringComparison.OrdinalIgnoreCase)
+            || key.Equals("request", StringComparison.OrdinalIgnoreCase)) // 👈 fix
             return "CorpoDaRequisicao";
 
         if (key.StartsWith("$."))
@@ -55,7 +56,9 @@ public static class ServiceCollectionExtensions
         if (mensagem.Contains("could not be converted to System.Guid", StringComparison.OrdinalIgnoreCase))
             return "O identificador informado é inválido.";
 
-        if (mensagem.Contains("The dto field is required", StringComparison.OrdinalIgnoreCase))
+        if (mensagem.Contains("The dto field is required", StringComparison.OrdinalIgnoreCase)
+            || mensagem.Contains("A non-empty request body is required", StringComparison.OrdinalIgnoreCase)
+            || mensagem.Contains("The request field is required", StringComparison.OrdinalIgnoreCase)) // 👈 novo
             return "O corpo da requisição é obrigatório.";
 
         return mensagem;
