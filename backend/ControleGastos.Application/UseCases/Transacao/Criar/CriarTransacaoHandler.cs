@@ -14,7 +14,7 @@ public class CriarTransacaoHandler(ITransacaoRepository transacaoRepository, IPe
 
     public async Task<CriarTransacaoResponse> ExecuteAsync(CriarTransacaoRequest request, CancellationToken cancellationToken = default)
     {
-        // REGRA DE NEGÓCIO EXIGIDA:
+        
         // O identificador da pessoa informada precisa existir no cadastro antes da criação da transação.
         var pessoa = await _pessoaRepository.ObterPorIdAsync(request.PessoaId, cancellationToken)
             ?? throw new RegraDeNegocioException("A pessoa informada para a transação não foi localizada no sistema.");

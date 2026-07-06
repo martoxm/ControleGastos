@@ -16,8 +16,6 @@ public class DeletarPessoaHandler(IPessoaRepository pessoaRepository, ITransacao
     {
         _ = await _pessoaRepository.ObterPorIdAsync(id, cancellationToken) ?? throw new NotFoundException("Pessoa não encontrada.");
 
-        // REGRA DE NEGÓCIO EXIGIDA:
-        // Ao deletar uma pessoa, todas as transações vinculadas a ela também devem ser apagadas.
         // O banco já está configurado com exclusão em cascata, mas manter este fluxo explícito
         // deixa a regra mais visível na camada de aplicação e facilita a explicação do projeto.
         await _transacaoRepository.DeletarTransacoesDeUmaPessoaAsync(id, cancellationToken);

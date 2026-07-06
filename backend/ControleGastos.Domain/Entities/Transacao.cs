@@ -55,7 +55,6 @@ namespace ControleGastos.Domain.Entities
             if (!Enum.IsDefined(tipo))
                 throw new ArgumentException("O tipo da transação informado é inválido.");
 
-            // REGRA DE NEGÓCIO:
             // Se a pessoa for menor de idade (menos de 18 anos),
             // apenas transações do tipo Despesa podem ser cadastradas.
             if (pessoa.EhMenorDeIdade() && tipo == TipoTransacao.Receita)

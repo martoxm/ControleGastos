@@ -14,7 +14,7 @@ public class ListarPessoasHandler(IPessoaRepository pessoaRepository) : IListarP
     {
         var pessoas = await _pessoaRepository.ListarTodasAsync(cancellationToken);
 
-        // Mapeia cada entidade de domínio para o DTO de exibição,
+        // Mapeia cada entidade de domínio,
         // evitando expor a entidade diretamente para a camada de apresentação.
         return pessoas.Select(p => new ListarPessoasResponse
         {
