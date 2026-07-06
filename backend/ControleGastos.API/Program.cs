@@ -124,12 +124,10 @@ if (app.Environment.IsDevelopment())
 
 // ---------------------------------------------------------------
 // Pipeline HTTP — ordem importa:
-// 1. HTTPS  → redireciona HTTP para HTTPS
-// 2. CORS   → antes de qualquer lógica de rota
-// 3. Auth   → autorização (preparado para expansão futura)
-// 4. Routes → mapeia os controllers
+// 1. CORS   → antes de qualquer lógica de rota
+// 2. Auth   → autorização (preparado para expansão futura)
+// 3. Routes → mapeia os controllers
 // ---------------------------------------------------------------
-app.UseHttpsRedirection();
 app.UseCors("AllowReact");
 app.UseAuthorization();
 app.MapControllers();
