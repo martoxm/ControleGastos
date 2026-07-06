@@ -66,10 +66,10 @@ const PessoasPage = () => {
       // Recarrega a lista para mostrar o novo registro
       await carregarPessoas()
     } catch (err: unknown) {
-      // Captura a mensagem de erro vinda do backend (ex: validação)
-      const msg = (err as { response?: { data?: { message?: string } } })
-        ?.response?.data?.message
-      setErro(msg ?? "Erro ao cadastrar pessoa. Tente novamente.")
+      const data = (err as { response?: { data?: { erro?: string } } })
+        ?.response?.data
+
+      setErro(data?.erro ?? "Erro ao cadastrar pessoa. Tente novamente.")
     } finally {
       setEnviando(false)
     }

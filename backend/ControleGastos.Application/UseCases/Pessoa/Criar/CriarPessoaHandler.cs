@@ -13,7 +13,7 @@ public class CriarPessoaHandler(IPessoaRepository pessoaRepository) : ICriarPess
     public async Task<CriarPessoaResponse> ExecuteAsync(CriarPessoaRequest request, CancellationToken cancellationToken = default)
     {
         // A entidade de domínio é criada aqui, mantendo a lógica de negócio encapsulada no construtor da entidade.
-        var novaPessoa = new Domain.Entities.Pessoa(request.Nome, request.Idade);
+        var novaPessoa = new Domain.Entities.Pessoa(request.Nome, (int)request.Idade!);
         await _pessoaRepository.AdicionarAsync(novaPessoa, cancellationToken);
 
         return new CriarPessoaResponse
