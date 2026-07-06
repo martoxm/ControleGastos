@@ -34,45 +34,60 @@ Sistema web para controle de gastos residenciais com cadastro de pessoas, cadast
 
 ## Como executar
 
+> ⚠️ **Atenção:** o projeto possui dois servidores independentes — backend e frontend.
+> Ambos precisam estar rodando ao mesmo tempo para o sistema funcionar.
+
 ### Pré-requisitos
 
-- [.NET 10 SDK](https://dotnet.microsoft.com/)
-- [Node.js 20+](https://nodejs.org/)
+- [.NET 10 SDK](https://dotnet.microsoft.com/) — necessário para compilar e rodar o backend
+- [Node.js 20+](https://nodejs.org/) — necessário para rodar o frontend React. O `npm` (gerenciador de pacotes) já vem incluído na instalação do Node.js
 
-### Backend
+> 💡 Para verificar se já possui o Node.js instalado, execute `node -v` no terminal.
+> Para verificar o .NET, execute `dotnet --version`.
 
-> ⚠️ O backend deve rodar obrigatoriamente pelo perfil **http** na porta `5176`.
+---
 
-**Opção 1 — Visual Studio**
+### 1. Backend
+
+O backend pode ser iniciado pelo **Visual Studio** ou pelo **terminal**.
+
+**Visual Studio 2026**
 
 Abra o arquivo `ControleGastos.slnx`, selecione o perfil **`http`** no botão de execução e pressione **F5**.
 
-**Opção 2 — VS Code ou qualquer terminal**
-
-Abra a pasta raiz do projeto no VS Code, acesse o terminal integrado e execute:
+**Terminal (VS Code, PowerShell ou CMD)**
 
 ```bash
 cd backend/ControleGastos.API
 dotnet run --launch-profile http
 ```
 
-A API ficará disponível em `http://localhost:5176`.
-O Swagger abrirá automaticamente em `http://localhost:5176`.
+✅ API disponível em `http://localhost:5176`
+✅ Swagger disponível em `http://localhost:5176`
+✅ O banco de dados SQLite é criado automaticamente na primeira execução
 
-> O banco de dados SQLite é criado e migrado automaticamente ao iniciar a aplicação.
+---
 
-### Frontend
+### 2. Frontend
 
-Abra a pasta `frontend` no VS Code e execute no terminal integrado:
+> ⚠️ **O frontend não pode ser iniciado pelo Visual Studio.**
+> Use obrigatoriamente um terminal — recomendamos o terminal integrado do **VS Code**.
+
+Abra a pasta `frontend` no VS Code, acesse o terminal integrado (`Ctrl + '`) e execute:
 
 ```bash
 npm install
 npm run dev
 ```
 
-O frontend ficará disponível em `http://localhost:5173`.
+✅ Frontend disponível em `http://localhost:5173`
 
-> ⚠️ O backend precisa estar rodando antes de iniciar o frontend.
+---
+
+### Atalho — Windows
+
+Prefere subir tudo de uma vez? Execute o arquivo **`iniciar.bat`** na raiz do projeto.
+Ele abre o backend e o frontend automaticamente em janelas separadas.
 
 ---
 
@@ -92,7 +107,6 @@ ControleGastos/
 ├── pages/ # Telas da aplicação
 ├── services/ # Comunicação com a API
 └── types/ # Tipagem TypeScript dos dados
-
 ```
 
 ---
