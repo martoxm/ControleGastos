@@ -486,3 +486,5 @@ $RECYCLE.BIN/
 /backend/ControleGastos.API/Data/ControleGastos.db
 /backend/ControleGastos.API/Data/ControleGastos.db-shm
 /backend/ControleGastos.API/Data/ControleGastos.db-wal
+/backend/ControleGastos.API/Data/ControleGastos.db-shm
+/backend/ControleGastos.API/Data/ControleGastos.db-wal
