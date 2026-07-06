@@ -1,11 +1,7 @@
 using ControleGastos.Api.Extensions;
+using ControleGastos.API.Extensions;
 using ControleGastos.API.Middlewares;
-using ControleGastos.Application.Intefaces;
-using ControleGastos.Application.Interfaces;
-using ControleGastos.Application.Services;
-using ControleGastos.Domain.Interfaces;
 using ControleGastos.Infrastructure.Context;
-using ControleGastos.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 
@@ -14,29 +10,7 @@ using Microsoft.OpenApi;
 // =============================================================
 var builder = WebApplication.CreateBuilder(args);
 
-// ---------------------------------------------------------------
-// Banco de dados — SQLite via connection string do appsettings.json
-// Lança exceção clara se a connection string não estiver configurada
-// ---------------------------------------------------------------
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
-    ?? throw new InvalidOperationException("A connection string 'DefaultConnection' não foi encontrada.");
-
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlite(connectionString));
-
-// ---------------------------------------------------------------
-// Repositórios — Scoped: uma instância por requisição HTTP
-// Seguindo o princípio de inversão de dependência (DIP do SOLID)
-// ---------------------------------------------------------------
-builder.Services.AddScoped<IPessoaRepository, PessoaRepository>();
-builder.Services.AddScoped<ITransacaoRepository, TransacaoRepository>();
-
-// ---------------------------------------------------------------
-// Serviços da camada de aplicação — orquestram as regras de negócio
-// ---------------------------------------------------------------
-builder.Services.AddScoped<IPessoaAppService, PessoaAppService>();
-builder.Services.AddScoped<ITransacaoAppService, TransacaoAppService>();
-
+builder.Services.AddApplicationServices(builder.Configuration);
 // ---------------------------------------------------------------
 // Controllers — suporte a rotas e endpoints REST
 // ---------------------------------------------------------------
