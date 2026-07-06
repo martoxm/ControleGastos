@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ControleGastos.Application.DTOs
+namespace ControleGastos.Application.Responses
 {
     /// <summary>
     /// Representa uma resposta padronizada de erro da API.

@@ -18,9 +18,6 @@ namespace ControleGastos.Application.Services
 
         public async Task<PessoaExibicaoDto> CriarAsync(PessoaCadastroDto dto, CancellationToken cancellationToken = default)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto), "Os dados da pessoa são obrigatórios.");
-
             var novaPessoa = new Pessoa(dto.Nome, dto.Idade);
             await _pessoaRepository.AdicionarAsync(novaPessoa, cancellationToken);
 

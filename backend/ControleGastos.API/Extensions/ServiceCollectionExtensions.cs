@@ -1,4 +1,5 @@
 ﻿using ControleGastos.Application.DTOs;
+using ControleGastos.Application.Responses;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ControleGastos.Api.Extensions;

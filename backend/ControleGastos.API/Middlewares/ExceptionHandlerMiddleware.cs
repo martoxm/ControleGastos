@@ -1,4 +1,4 @@
-﻿using ControleGastos.Application.DTOs;
+﻿using ControleGastos.Application.Responses;
 using ControleGastos.Domain.Exceptions;
 
 namespace ControleGastos.API.Middlewares;

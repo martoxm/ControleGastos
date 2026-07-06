@@ -18,9 +18,6 @@ namespace ControleGastos.Application.Services
 
         public async Task<TransacaoExibicaoDto> CriarAsync(TransacaoCadastroDto dto, CancellationToken cancellationToken = default)
         {
-            if (dto == null)
-                throw new ArgumentNullException(nameof(dto), "Os dados da transação são obrigatórios.");
-
             // REGRA DE NEGÓCIO EXIGIDA:
             // O identificador da pessoa informada precisa existir no cadastro antes da criação da transação.
             var pessoa = await _pessoaRepository.ObterPorIdAsync(dto.PessoaId, cancellationToken) ?? throw new RegraDeNegocioException("A pessoa informada para a transação não foi localizada no sistema.");
