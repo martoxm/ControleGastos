@@ -8,7 +8,7 @@
     {
         public Guid Id { get; private set; }
 
-        public string? Nome { get; private set; }
+        public string Nome { get; private set; } = string.Empty;
         public int Idade { get; private set; }
 
         /// <summary>
