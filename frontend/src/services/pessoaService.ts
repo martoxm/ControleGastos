@@ -7,17 +7,17 @@
 // GET    /api/pessoas/totais   → relatório financeiro geral
 
 import { api } from "./api"
-import type { Pessoa, CriarPessoaDTO } from "../types/Pessoa"
+import type { PessoaResponse, CriarPessoaRequest } from "../types/Pessoa"
 import type { RelatorioFinanceiroGeral } from "../types/Relatorio"
 
 export const pessoaService = {
-  listar: async (): Promise<Pessoa[]> => {
-    const response = await api.get<Pessoa[]>("/pessoas")
+  listar: async (): Promise<PessoaResponse[]> => {
+    const response = await api.get<PessoaResponse[]>("/pessoas")
     return response.data
   },
 
-  criar: async (dados: CriarPessoaDTO): Promise<Pessoa> => {
-    const response = await api.post<Pessoa>("/pessoas", dados)
+  criar: async (dados: CriarPessoaRequest): Promise<PessoaResponse> => {
+    const response = await api.post<PessoaResponse>("/pessoas", dados)
     return response.data
   },
 
