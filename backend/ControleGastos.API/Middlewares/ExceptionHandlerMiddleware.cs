@@ -38,7 +38,7 @@ public class ExceptionHandlerMiddleware(RequestDelegate next)
             return;
         }
 
-        if (exception is RegraDeNegocioException || exception is ArgumentException)
+        if (exception is RegraDeNegocioException)
         {
             context.Response.StatusCode = StatusCodes.Status400BadRequest;
 
