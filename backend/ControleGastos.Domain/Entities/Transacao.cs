@@ -22,9 +22,6 @@ namespace ControleGastos.Domain.Entities
 
         public Transacao(string descricao, decimal valor, TipoTransacao tipo, Pessoa pessoa)
         {
-            if (pessoa == null)
-                throw new RegraDeNegocioException("A transação precisa estar vinculada a uma pessoa existente.");
-
             ValidarDados(descricao, valor, tipo, pessoa);
 
             Id = Guid.NewGuid();
