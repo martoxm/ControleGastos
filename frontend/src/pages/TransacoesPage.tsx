@@ -7,14 +7,17 @@
 import { useState, useEffect } from "react"
 import { transacaoService } from "../services/transacaoService"
 import { pessoaService } from "../services/pessoaService"
-import type { Transacao, CriarTransacaoDTO } from "../types/Transacao"
-import type { Pessoa } from "../types/Pessoa"
+import type {
+  TransacaoResponse,
+  CriarTransacaoRequest,
+} from "../types/Transacao"
+import type { PessoaResponse } from "../types/Pessoa"
 import { TIPO_TRANSACAO } from "../types/Transacao"
 
 const TransacoesPage = () => {
   // ── Estado da listagem ──────────────────────────────────
-  const [transacoes, setTransacoes] = useState<Transacao[]>([])
-  const [pessoas, setPessoas] = useState<Pessoa[]>([])
+  const [transacoes, setTransacoes] = useState<TransacaoResponse[]>([])
+  const [pessoas, setPessoas] = useState<PessoaResponse[]>([])
   const [carregando, setCarregando] = useState(true)
 
   // ── Estado do formulário ────────────────────────────────
@@ -85,7 +88,7 @@ const TransacoesPage = () => {
       return
     }
 
-    const dados: CriarTransacaoDTO = {
+    const dados: CriarTransacaoRequest = {
       descricao: descricao.trim(),
       valor: valorNum,
       tipo,

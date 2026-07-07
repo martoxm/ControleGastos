@@ -4,11 +4,11 @@
 
 import { useState, useEffect } from "react"
 import { pessoaService } from "../services/pessoaService"
-import type { Pessoa, CriarPessoaDTO } from "../types/Pessoa"
+import type { PessoaResponse, CriarPessoaRequest } from "../types/Pessoa"
 
 const PessoasPage = () => {
   // ── Estado da listagem ──────────────────────────────────
-  const [pessoas, setPessoas] = useState<Pessoa[]>([])
+  const [pessoas, setPessoas] = useState<PessoaResponse[]>([])
   const [carregando, setCarregando] = useState(true)
 
   // ── Estado do formulário ────────────────────────────────
@@ -54,7 +54,7 @@ const PessoasPage = () => {
       return
     }
 
-    const dados: CriarPessoaDTO = { nome: nome.trim(), idade: idadeNum }
+    const dados: CriarPessoaRequest = { nome: nome.trim(), idade: idadeNum }
 
     try {
       setEnviando(true)
@@ -76,7 +76,7 @@ const PessoasPage = () => {
   }
 
   // ── Deletar pessoa ─────────────────────────────────────
-  const handleDeletar = async (pessoa: Pessoa) => {
+  const handleDeletar = async (pessoa: PessoaResponse) => {
     // Confirmação para evitar exclusão acidental
     const confirmado = window.confirm(
       `Deseja remover "${pessoa.nome}"?\nTodas as transações desta pessoa também serão apagadas.`,
