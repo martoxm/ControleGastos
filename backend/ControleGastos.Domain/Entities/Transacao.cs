@@ -10,15 +10,13 @@ namespace ControleGastos.Domain.Entities
     public class Transacao
     {
         public Guid Id { get; private set; }
-        public string Descricao { get; private set; }
+        public string Descricao { get; private set; } = string.Empty;
         public decimal Valor { get; private set; }
         public TipoTransacao Tipo { get; private set; }
         public Guid PessoaId { get; private set; }
 
-        protected Transacao()
-        {
-            Descricao = string.Empty;
-        }
+        private Transacao()
+        { }
 
         public Transacao(string descricao, decimal valor, TipoTransacao tipo, Pessoa pessoa)
         {
