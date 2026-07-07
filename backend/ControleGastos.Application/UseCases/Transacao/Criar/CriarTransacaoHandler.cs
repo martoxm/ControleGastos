@@ -15,7 +15,7 @@ public class CriarTransacaoHandler(ITransacaoRepository transacaoRepository, IPe
         
         // O identificador da pessoa informada precisa existir no cadastro antes da criação da transação.
         var pessoa = await _pessoaRepository.ObterPorIdAsync(request.PessoaId, cancellationToken)
-            ?? throw new RegraDeNegocioException("A pessoa informada para a transação não foi localizada no sistema.");
+            ?? throw new NotFoundException("A pessoa informada para a transação não foi localizada no sistema.");
 
         // O construtor da entidade Transacao valida internamente:
         // - descrição obrigatória
