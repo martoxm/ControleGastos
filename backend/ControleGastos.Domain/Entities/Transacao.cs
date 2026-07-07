@@ -36,15 +36,21 @@ namespace ControleGastos.Domain.Entities
 
         private static void ValidarDados(string descricao, decimal valor, TipoTransacao tipo, Pessoa pessoa)
         {
+            var erros = new Dictionary<string, string[]>();
+
             if (string.IsNullOrWhiteSpace(descricao))
-                throw new RegraDeNegocioException("A descrição da transação é obrigatória.");
+                erros["Descricao"] = ["A descrição da transação é obrigatória."];
 
             if (valor <= 0)
-                throw new RegraDeNegocioException("O valor da transação deve ser maior que zero.");
+                erros["Valor"] = ["O valor da transação deve ser maior que zero."];
 
             if (!Enum.IsDefined(tipo))
-                throw new RegraDeNegocioException("O tipo da transação informado é inválido.");
+                erros["Tipo"] = ["O tipo da transação informado é inválido."];
 
+            if (erros.Count > 0)
+                throw new ErrosDeValidacaoException(erros);
+
+            // Regra de negócio isolada — lança exception única, não de validação
             if (pessoa.EhMenorDeIdade() && tipo == TipoTransacao.Receita)
                 throw new RegraDeNegocioException("Menores de 18 anos só podem cadastrar transações do tipo Despesa.");
         }

@@ -1,4 +1,3 @@
-using ControleGastos.Api.Extensions;
 using ControleGastos.API.Extensions;
 using ControleGastos.API.Middlewares;
 
@@ -7,8 +6,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddApplicationServices(builder.Configuration);
 
 builder.Services.AddControllers();// Controllers — suporte a rotas e endpoints REST
-
-builder.Services.AddCustomApiBehavior();// Personaliza o retorno padrão das validações automáticas do ASP.NET Core
 
 builder.Services.AddSwagger();// Swagger — documentação interativa da API
 

@@ -17,11 +17,16 @@ namespace ControleGastos.Domain.Entities
 
         public Pessoa(string nome, int idade)
         {
-            if (string.IsNullOrWhiteSpace(nome))
-                throw new RegraDeNegocioException("O nome não pode ser vazio ou nulo.");
+            var erros = new Dictionary<string, string[]>();
 
-            if (idade < 0)
-                throw new RegraDeNegocioException("A idade não pode ser um valor negativo.");
+            if (string.IsNullOrWhiteSpace(nome))
+                erros["Nome"] = ["O nome não pode ser vazio ou nulo."];
+
+            if (idade < 1)
+                erros["Idade"] = ["A idade deve ser maior que zero."];
+
+            if (erros.Count > 0)
+                throw new ErrosDeValidacaoException(erros);
 
             Id = Guid.NewGuid();
             Nome = nome.Trim();

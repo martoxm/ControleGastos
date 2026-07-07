@@ -29,6 +29,7 @@ const TransacoesPage = () => {
   // ── Estado de feedback ──────────────────────────────────
   const [enviando, setEnviando] = useState(false)
   const [erro, setErro] = useState("")
+  const [errosCampo, setErrosCampo] = useState<Record<string, string[]>>({})
   const [sucesso, setSucesso] = useState("")
 
   // ── Carrega listas ao abrir a página ───────────────────
@@ -71,26 +72,12 @@ const TransacoesPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setErro("")
+    setErrosCampo({})
     setSucesso("")
-
-    // Validações no frontend
-    if (!descricao.trim()) {
-      setErro("A descrição é obrigatória.")
-      return
-    }
-    const valorNum = Number(valor)
-    if (!valor || isNaN(valorNum) || valorNum <= 0) {
-      setErro("O valor deve ser maior que zero.")
-      return
-    }
-    if (!pessoaId) {
-      setErro("Selecione uma pessoa.")
-      return
-    }
 
     const dados: CriarTransacaoRequest = {
       descricao: descricao.trim(),
-      valor: valorNum,
+      valor: Number(valor),
       tipo,
       pessoaId,
     }
@@ -108,9 +95,21 @@ const TransacoesPage = () => {
       const novasTransacoes = await transacaoService.listar()
       setTransacoes(novasTransacoes)
     } catch (err: unknown) {
-      const msg = (err as { response?: { data?: { message?: string } } })
-        ?.response?.data?.message
-      setErro(msg ?? "Erro ao cadastrar transação. Tente novamente.")
+      const data = (
+        err as {
+          response?: {
+            data?: { erro?: string; erros?: Record<string, string[]> }
+          }
+        }
+      )?.response?.data
+
+      // Se vier erros por campo, exibe cada um abaixo do campo correspondente
+      if (data?.erros) {
+        setErrosCampo(data.erros)
+        setErro(data.erro ?? "Existem erros de validação.")
+      } else {
+        setErro(data?.erro ?? "Erro ao cadastrar transação. Tente novamente.")
+      }
     } finally {
       setEnviando(false)
     }
@@ -149,6 +148,12 @@ const TransacoesPage = () => {
                 </option>
               ))}
             </select>
+            {/* Erros de validação do campo Pessoa vindos do backend */}
+            {errosCampo["PessoaId"]?.map((e, i) => (
+              <p key={i} className="msg-erro">
+                {e}
+              </p>
+            ))}
           </div>
 
           <div className="form-group">
@@ -161,6 +166,12 @@ const TransacoesPage = () => {
               onChange={(e) => setDescricao(e.target.value)}
               maxLength={200}
             />
+            {/* Erros de validação do campo Descrição vindos do backend */}
+            {errosCampo["Descricao"]?.map((e, i) => (
+              <p key={i} className="msg-erro">
+                {e}
+              </p>
+            ))}
           </div>
 
           <div className="form-group">
@@ -174,6 +185,12 @@ const TransacoesPage = () => {
               min="0.01"
               step="0.01"
             />
+            {/* Erros de validação do campo Valor vindos do backend */}
+            {errosCampo["Valor"]?.map((e, i) => (
+              <p key={i} className="msg-erro">
+                {e}
+              </p>
+            ))}
           </div>
 
           <div className="form-group">
@@ -197,6 +214,11 @@ const TransacoesPage = () => {
                 ⚠️ Menores de 18 anos só podem cadastrar despesas.
               </p>
             )}
+            {errosCampo["Tipo"]?.map((e, i) => (
+              <p key={i} className="msg-erro">
+                {e}
+              </p>
+            ))}
           </div>
 
           {erro && <p className="msg-erro">{erro}</p>}

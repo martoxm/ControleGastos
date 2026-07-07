@@ -18,6 +18,7 @@ const PessoasPage = () => {
   // ── Estado de feedback para o usuário ──────────────────
   const [enviando, setEnviando] = useState(false)
   const [erro, setErro] = useState("")
+  const [errosCampo, setErrosCampo] = useState<Record<string, string[]>>({})
   const [sucesso, setSucesso] = useState("")
 
   // ── Carrega a lista ao abrir a página ──────────────────
@@ -41,20 +42,13 @@ const PessoasPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault() // impede o recarregamento padrão do formulário
     setErro("")
+    setErrosCampo({})
     setSucesso("")
 
-    // Validação básica no frontend (o backend também valida)
-    if (!nome.trim()) {
-      setErro("O nome é obrigatório.")
-      return
+    const dados: CriarPessoaRequest = {
+      nome: nome.trim(),
+      idade: Number(idade),
     }
-    const idadeNum = Number(idade)
-    if (!idade || isNaN(idadeNum) || idadeNum < 0 || idadeNum > 150) {
-      setErro("Informe uma idade válida entre 0 e 150.")
-      return
-    }
-
-    const dados: CriarPessoaRequest = { nome: nome.trim(), idade: idadeNum }
 
     try {
       setEnviando(true)
@@ -66,10 +60,21 @@ const PessoasPage = () => {
       // Recarrega a lista para mostrar o novo registro
       await carregarPessoas()
     } catch (err: unknown) {
-      const data = (err as { response?: { data?: { erro?: string } } })
-        ?.response?.data
+      const data = (
+        err as {
+          response?: {
+            data?: { erro?: string; erros?: Record<string, string[]> }
+          }
+        }
+      )?.response?.data
 
-      setErro(data?.erro ?? "Erro ao cadastrar pessoa. Tente novamente.")
+      // Se vier erros por campo, exibe cada um abaixo do campo correspondente
+      if (data?.erros) {
+        setErrosCampo(data.erros)
+        setErro(data.erro ?? "Existem erros de validação.")
+      } else {
+        setErro(data?.erro ?? "Erro ao cadastrar pessoa. Tente novamente.")
+      }
     } finally {
       setEnviando(false)
     }
@@ -111,6 +116,12 @@ const PessoasPage = () => {
               onChange={(e) => setNome(e.target.value)}
               maxLength={150}
             />
+            {/* Erros de validação do campo Nome vindos do backend */}
+            {errosCampo["Nome"]?.map((e, i) => (
+              <p key={i} className="msg-erro">
+                {e}
+              </p>
+            ))}
           </div>
 
           <div className="form-group">
@@ -127,6 +138,12 @@ const PessoasPage = () => {
               }}
               maxLength={3}
             />
+            {/* Erros de validação do campo Idade vindos do backend */}
+            {errosCampo["Idade"]?.map((e, i) => (
+              <p key={i} className="msg-erro">
+                {e}
+              </p>
+            ))}
           </div>
 
           {/* Mensagens de feedback */}

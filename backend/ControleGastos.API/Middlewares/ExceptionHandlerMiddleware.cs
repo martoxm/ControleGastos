@@ -3,7 +3,7 @@ using ControleGastos.Domain.Exceptions;
 
 namespace ControleGastos.API.Middlewares;
 
-///<summary> Middleware responsável por capturar exceções não tratadas e retornar
+/// <summary>Middleware responsável por capturar exceções não tratadas e retornar
 /// respostas padronizadas, mantendo o Program.cs limpo e com responsabilidade única.</summary>
 public class ExceptionHandlerMiddleware(RequestDelegate next)
 {
@@ -33,6 +33,20 @@ public class ExceptionHandlerMiddleware(RequestDelegate next)
             {
                 Erro = exception.Message,
                 Status = 404
+            });
+
+            return;
+        }
+
+        if (exception is ErrosDeValidacaoException validacao)
+        {
+            context.Response.StatusCode = StatusCodes.Status400BadRequest;
+
+            await context.Response.WriteAsJsonAsync(new ResponseErrorDto
+            {
+                Erro = validacao.Message,
+                Status = 400,
+                Erros = validacao.Erros
             });
 
             return;
