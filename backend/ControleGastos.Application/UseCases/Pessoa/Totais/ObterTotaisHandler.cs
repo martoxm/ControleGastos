@@ -3,10 +3,8 @@ using ControleGastos.Domain.Interfaces;
 
 namespace ControleGastos.Application.UseCases.Pessoa.Totais;
 
-/// <summary>
-/// Caso de uso responsável por gerar o relatório financeiro geral do sistema.
-/// Calcula os totais individuais por pessoa e consolida o resultado geral.
-/// </summary>
+/// <summary>Caso de uso responsável por gerar o relatório financeiro geral do sistema.
+/// Calcula os totais individuais por pessoa e consolida o resultado geral.</summary>
 public class ObterTotaisHandler(IPessoaRepository pessoaRepository, ITransacaoRepository transacaoRepository) : IObterTotaisHandler
 {
     private readonly IPessoaRepository _pessoaRepository = pessoaRepository;
@@ -24,10 +22,8 @@ public class ObterTotaisHandler(IPessoaRepository pessoaRepository, ITransacaoRe
         return MontarRelatorio(listaTotais);
     }
 
-    /// <summary>
-    /// Calcula receitas, despesas e saldo de uma pessoa específica
-    /// filtrando apenas as transações que pertencem a ela.
-    /// </summary>
+    /// <summary>Calcula receitas, despesas e saldo de uma pessoa específica
+    /// filtrando apenas as transações que pertencem a ela.</summary>
     private static TotalPorPessoaResponse CalcularTotalPorPessoa(
         Domain.Entities.Pessoa pessoa,
         IEnumerable<Domain.Entities.Transacao> transacoes)
@@ -48,10 +44,8 @@ public class ObterTotaisHandler(IPessoaRepository pessoaRepository, ITransacaoRe
         };
     }
 
-    /// <summary>
-    /// Consolida os totais individuais no relatório geral do sistema,
-    /// somando receitas, despesas e saldo líquido de todas as pessoas.
-    /// </summary>
+    /// <summary>Consolida os totais individuais no relatório geral do sistema,
+    /// somando receitas, despesas e saldo líquido de todas as pessoas.</summary>
     private static ObterTotaisResponse MontarRelatorio(List<TotalPorPessoaResponse> totais)
     {
         return new ObterTotaisResponse

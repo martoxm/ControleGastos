@@ -3,10 +3,8 @@ using ControleGastos.Domain.Exceptions;
 
 namespace ControleGastos.API.Middlewares;
 
-/// <summary>
-/// Middleware responsável por capturar exceções não tratadas e retornar
-/// respostas padronizadas, mantendo o Program.cs limpo e com responsabilidade única.
-/// </summary>
+///<summary> Middleware responsável por capturar exceções não tratadas e retornar
+/// respostas padronizadas, mantendo o Program.cs limpo e com responsabilidade única.</summary>
 public class ExceptionHandlerMiddleware(RequestDelegate next)
 {
     private readonly RequestDelegate _next = next;

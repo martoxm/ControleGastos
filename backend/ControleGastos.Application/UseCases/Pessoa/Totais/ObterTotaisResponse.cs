@@ -1,9 +1,7 @@
 ﻿namespace ControleGastos.Application.UseCases.Pessoa.Totais;
 
-/// <summary>
-/// Totais financeiros calculados individualmente para cada pessoa cadastrada.
-/// O Saldo é calculado automaticamente como propriedade derivada.
-/// </summary>
+/// <summary>Totais financeiros calculados individualmente para cada pessoa cadastrada.
+/// O Saldo é calculado automaticamente como propriedade derivada.</summary>
 public class TotalPorPessoaResponse
 {
     public Guid PessoaId { get; set; }

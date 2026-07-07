@@ -3,10 +3,8 @@ using ControleGastos.Domain.Exceptions;
 
 namespace ControleGastos.Domain.Entities
 {
-    /// <summary>
-    /// Entidade que representa uma movimentação financeira (Transação).
-    /// Possui regras rígidas acopladas à idade da Pessoa vinculada.
-    /// </summary>
+    ///<summary> Entidade que representa uma movimentação financeira (Transação).
+    /// Possui regras rígidas acopladas à idade da Pessoa vinculada.</summary>
     public class Transacao
     {
         public Guid Id { get; private set; }
@@ -15,10 +13,8 @@ namespace ControleGastos.Domain.Entities
         public TipoTransacao Tipo { get; private set; }
         public Guid PessoaId { get; private set; }
 
-        /// <summary>
-        /// Construtor sem parâmetros exigido exclusivamente pelo Entity Framework Core.
-        /// Declarado como 'protected' para impedir que a camada de Aplicação o use incorretamente.
-        /// </summary>
+        /// <summary>Construtor sem parâmetros exigido exclusivamente pelo Entity Framework Core.
+        /// Declarado como 'protected' para impedir que a camada de Aplicação o use incorretamente.</summary>
         protected Transacao()
         {
             Descricao = string.Empty;

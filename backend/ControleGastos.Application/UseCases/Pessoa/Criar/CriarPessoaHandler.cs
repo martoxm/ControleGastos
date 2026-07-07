@@ -2,10 +2,8 @@
 
 namespace ControleGastos.Application.UseCases.Pessoa.Criar;
 
-/// <summary>
-/// Caso de uso responsável por orquestrar o cadastro de uma nova pessoa.
-/// Recebe o request validado, cria a entidade de domínio e persiste via repositório.
-/// </summary>
+/// <summary>Caso de uso responsável por orquestrar o cadastro de uma nova pessoa.
+/// Recebe o request validado, cria a entidade de domínio e persiste via repositório.</summary>
 public class CriarPessoaHandler(IPessoaRepository pessoaRepository) : ICriarPessoaHandler
 {
     private readonly IPessoaRepository _pessoaRepository = pessoaRepository;

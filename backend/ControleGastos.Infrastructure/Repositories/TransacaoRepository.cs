@@ -5,10 +5,10 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Infrastructure.Repositories
 {
-    /// <summary>
-    /// Repositório responsável pela persistência da entidade Transacao.
-    /// Implementa operações de cadastro, consulta e remoção por pessoa.
-    /// </summary>
+    /// 
+    ///<summary> Repositório responsável pela persistência da entidade Transacao.
+    /// Implementa operações de cadastro, consulta e remoção por pessoa.</summary>
+    /// 
     public class TransacaoRepository(AppDbContext context) : ITransacaoRepository
     {
         private readonly AppDbContext _context = context;

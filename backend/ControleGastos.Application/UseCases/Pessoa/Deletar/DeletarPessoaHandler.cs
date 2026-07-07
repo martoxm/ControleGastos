@@ -3,10 +3,8 @@ using ControleGastos.Domain.Interfaces;
 
 namespace ControleGastos.Application.UseCases.Pessoa.Deletar;
 
-/// <summary>
-/// Caso de uso responsável por remover uma pessoa e todas as suas transações vinculadas.
-/// Garante a consistência dos dados antes de acionar o repositório.
-/// </summary>
+/// <summary>Caso de uso responsável por remover uma pessoa e todas as suas transações vinculadas.
+/// Garante a consistência dos dados antes de acionar o repositório.</summary>
 public class DeletarPessoaHandler(IPessoaRepository pessoaRepository, ITransacaoRepository transacaoRepository) : IDeletarPessoaHandler
 {
     private readonly IPessoaRepository _pessoaRepository = pessoaRepository;

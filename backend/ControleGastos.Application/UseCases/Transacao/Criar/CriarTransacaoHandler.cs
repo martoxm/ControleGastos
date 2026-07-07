@@ -3,10 +3,8 @@ using ControleGastos.Domain.Interfaces;
 
 namespace ControleGastos.Application.UseCases.Transacao.Criar;
 
-/// <summary>
-/// Caso de uso responsável por orquestrar o registro de uma nova transação.
-/// Valida a existência da pessoa vinculada antes de criar a entidade de domínio.
-/// </summary>
+/// <summary>Caso de uso responsável por orquestrar o registro de uma nova transação.
+/// Valida a existência da pessoa vinculada antes de criar a entidade de domínio.</summary>
 public class CriarTransacaoHandler(ITransacaoRepository transacaoRepository, IPessoaRepository pessoaRepository) : ICriarTransacaoHandler
 {
     private readonly ITransacaoRepository _transacaoRepository = transacaoRepository;
