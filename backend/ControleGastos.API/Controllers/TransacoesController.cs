@@ -8,44 +8,35 @@ namespace ControleGastos.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public class TransacoesController(
-    ICriarTransacaoHandler criarHandler,
-    IListarTransacoesHandler listarHandler) : ControllerBase
+public class TransacoesController : ControllerBase
 {
-    private readonly ICriarTransacaoHandler _criarHandler = criarHandler;
-    private readonly IListarTransacoesHandler _listarHandler = listarHandler;
-
-    /// <summary>
-    /// Registra uma nova transação vinculada a uma pessoa.
-    /// </summary>
-    /// <param name="request">Dados da transação a ser registrada.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>Retorna a transação criada.</returns>
+    /// <summary>Registra uma nova transação vinculada a uma pessoa.</summary>
     /// <response code="201">Transação criada com sucesso.</response>
     /// <response code="400">Dados inválidos ou regra de negócio violada.</response>
     [HttpPost]
     [ProducesResponseType(typeof(CriarTransacaoResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ResponseErrorDto), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Criar([FromBody] CriarTransacaoRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Criar(
+        [FromServices] ICriarTransacaoHandler criarHandler,
+        [FromBody] CriarTransacaoRequest request,
+        CancellationToken cancellationToken)
     {
-        var resultado = await _criarHandler.ExecuteAsync(request, cancellationToken);
+        var resultado = await criarHandler.ExecuteAsync(request, cancellationToken);
 
-        return CreatedAtAction(
-            nameof(Listar),
-            new { id = resultado.Id },
-            resultado);
+        return Created(string.Empty, resultado);
     }
 
-    /// <summary>
-    /// Lista todas as transações registradas.
-    /// </summary>
+    /// <summary>Lista todas as transações registradas.</summary>
     /// <returns>Retorna a lista de transações.</returns>
     /// <response code="200">Lista de transações retornada com sucesso.</response>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<ListarTransacoesResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Listar(CancellationToken cancellationToken)
+    public async Task<IActionResult> Listar(
+        [FromServices] IListarTransacoesHandler listarHandler,
+        CancellationToken cancellationToken)
     {
-        var transacoes = await _listarHandler.ExecuteAsync(cancellationToken);
+        var transacoes = await listarHandler.ExecuteAsync(cancellationToken);
+
         return Ok(transacoes);
     }
 }

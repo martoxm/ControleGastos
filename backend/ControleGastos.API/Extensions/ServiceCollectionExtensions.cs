@@ -39,7 +39,7 @@ public static class ServiceCollectionExtensions
     {
         if (string.IsNullOrWhiteSpace(key)
             || key.Equals("dto", StringComparison.OrdinalIgnoreCase)
-            || key.Equals("request", StringComparison.OrdinalIgnoreCase)) // 👈 fix
+            || key.Equals("request", StringComparison.OrdinalIgnoreCase))
             return "CorpoDaRequisicao";
 
         if (key.StartsWith("$."))
@@ -58,7 +58,7 @@ public static class ServiceCollectionExtensions
 
         if (mensagem.Contains("The dto field is required", StringComparison.OrdinalIgnoreCase)
             || mensagem.Contains("A non-empty request body is required", StringComparison.OrdinalIgnoreCase)
-            || mensagem.Contains("The request field is required", StringComparison.OrdinalIgnoreCase)) // 👈 novo
+            || mensagem.Contains("The request field is required", StringComparison.OrdinalIgnoreCase))
             return "O corpo da requisição é obrigatório.";
 
         return mensagem;

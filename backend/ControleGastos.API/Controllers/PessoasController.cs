@@ -10,83 +10,63 @@ namespace ControleGastos.API.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public class PessoasController(
-    ICriarPessoaHandler criarHandler,
-    IListarPessoasHandler listarHandler,
-    IDeletarPessoaHandler deletarHandler,
-    IObterTotaisHandler totaisHandler) : ControllerBase
+public class PessoasController : ControllerBase
 {
-    private readonly ICriarPessoaHandler _criarHandler = criarHandler;
-    private readonly IListarPessoasHandler _listarHandler = listarHandler;
-    private readonly IDeletarPessoaHandler _deletarHandler = deletarHandler;
-    private readonly IObterTotaisHandler _totaisHandler = totaisHandler;
-
-    /// <summary>
-    /// Cadastra uma nova pessoa.
-    /// </summary>
-    /// <param name="request">Dados da pessoa a ser cadastrada.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>Retorna a pessoa criada.</returns>
+    /// <summary>Cadastra uma nova pessoa.</summary>
     /// <response code="201">Pessoa criada com sucesso.</response>
-    /// <response code="400">Dados inválidos para cadastro. Pode retornar um ou mais campos com erro.</response>
+    /// <response code="400">Dados inválidos para cadastro.</response>
     [HttpPost]
     [ProducesResponseType(typeof(CriarPessoaResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(ResponseErrorDto), StatusCodes.Status400BadRequest)]
-    public async Task<IActionResult> Criar([FromBody] CriarPessoaRequest request, CancellationToken cancellationToken)
+    public async Task<IActionResult> Criar(
+        [FromServices] ICriarPessoaHandler criarHandler,
+        [FromBody] CriarPessoaRequest request,
+        CancellationToken cancellationToken)
     {
-        var resultado = await _criarHandler.ExecuteAsync(request, cancellationToken);
+        var resultado = await criarHandler.ExecuteAsync(request, cancellationToken);
 
-        return CreatedAtAction(
-            nameof(Listar),
-            new { id = resultado.Id },
-            resultado);
+        return Created(string.Empty, resultado);
     }
 
-    /// <summary>
-    /// Lista todas as pessoas cadastradas.
-    /// </summary>
-    /// <returns>Retorna a lista de pessoas.</returns>
+    /// <summary>Lista todas as pessoas cadastradas.</summary>
     /// <response code="200">Lista de pessoas retornada com sucesso.</response>
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<ListarPessoasResponse>), StatusCodes.Status200OK)]
-    public async Task<IActionResult> Listar(CancellationToken cancellationToken)
+    public async Task<IActionResult> Listar(
+        [FromServices] IListarPessoasHandler listarHandler,
+        CancellationToken cancellationToken)
     {
-        var pessoas = await _listarHandler.ExecuteAsync(cancellationToken);
+        var pessoas = await listarHandler.ExecuteAsync(cancellationToken);
+
         return Ok(pessoas);
     }
 
-    /// <summary>
-    /// Remove uma pessoa cadastrada.
-    /// </summary>
-    /// <param name="id">Identificador da pessoa.</param>
-    /// <param name="cancellationToken"></param>
-    /// <returns>Retorna a mensagem de exclusão.</returns>
-    /// <remarks>
-    /// Ao excluir uma pessoa, todas as transações vinculadas a ela também são removidas.
-    /// </remarks>
-    /// <response code="200">Pessoa removida com sucesso.</response>
+    /// <summary>Remove uma pessoa cadastrada.</summary>
+    /// <response code="204">Pessoa removida com sucesso.</response>
     /// <response code="404">Pessoa não encontrada.</response>
     [HttpDelete("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(typeof(ResponseErrorDto), StatusCodes.Status404NotFound)]
-    public async Task<IActionResult> Deletar(Guid id, CancellationToken cancellationToken)
+    public async Task<IActionResult> Deletar(
+        [FromServices] IDeletarPessoaHandler deletarHandler,
+        [FromRoute] Guid id,
+        CancellationToken cancellationToken)
     {
-        await _deletarHandler.ExecuteAsync(id, cancellationToken);
-        return Ok(new { mensagem = "Pessoa removida com sucesso." });
+        await deletarHandler.ExecuteAsync(id, cancellationToken);
+
+        return NoContent();
     }
 
-    /// <summary>
-    /// Consulta os totais por pessoa e o total geral.
-    /// </summary>
-    /// <returns>
-    /// Retorna receitas, despesas e saldo de cada pessoa, além do consolidado geral.
-    /// </returns>
+    /// <summary> Consulta os totais por pessoa e o total geral.</summary>
     /// <response code="200">Relatório retornado com sucesso.</response>
     [HttpGet("totais")]
     [ProducesResponseType(typeof(ObterTotaisResponse), StatusCodes.Status200OK)]
-    public async Task<IActionResult> ObterTotais(CancellationToken cancellationToken)
+    public async Task<IActionResult> ObterTotais(
+        [FromServices] IObterTotaisHandler totaisHandler,
+        CancellationToken cancellationToken)
     {
-        var relatorio = await _totaisHandler.ExecuteAsync(cancellationToken);
+        var relatorio = await totaisHandler.ExecuteAsync(cancellationToken);
+
         return Ok(relatorio);
     }
 }

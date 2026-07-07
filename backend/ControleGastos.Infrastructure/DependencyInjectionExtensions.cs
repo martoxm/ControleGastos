@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace ControleGastos.Infrastructure;
 
-public static class DependencyInjectionExtension
+public static class DependencyInjectionExtensions
 {
     public static IServiceCollection AddInfrastructure(
         this IServiceCollection services,
