@@ -3,9 +3,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Infrastructure.Context
 {
-    /// <summary>
-    /// Contexto do Banco de Dados configurado para mapear as entidades para tabelas SQLite.
-    /// </summary>
+    ///<summary> Contexto do Banco de Dados configurado para mapear as entidades para tabelas SQLite.</summary>
     public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
     {
         public DbSet<Pessoa> Pessoas { get; set; }
@@ -42,7 +40,7 @@ namespace ControleGastos.Infrastructure.Context
                 entity.Property(e => e.Valor)
                       .HasPrecision(18, 2)
                       .HasConversion<double>()
-                      .IsRequired(); // No SQLite, o suporte a decimal pode variar; por isso a conversão ajuda a evitar problemas de persistência neste teste.
+                      .IsRequired();
 
                 entity.Property(e => e.Tipo)
                       .IsRequired();

@@ -2,8 +2,8 @@
 
 namespace ControleGastos.Application.UseCases.Transacao.Criar;
 
-/// <summary>Dados de entrada necessários para registrar uma nova transação no sistema.
-/// Utilizado como parâmetro do endpoint POST /transacoes.</summary>
+/// <summary>Dados de entrada necessários para registrar uma nova transação no sistema.</summary>
+
 public class CriarTransacaoRequest
 {
     public string Descricao { get; set; } = string.Empty;

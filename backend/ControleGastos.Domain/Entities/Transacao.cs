@@ -3,10 +3,8 @@ using ControleGastos.Domain.Exceptions;
 
 namespace ControleGastos.Domain.Entities
 {
-    /// <summary>
-    /// Entidade que representa uma movimentação financeira (Transação).
-    /// Possui regras rígidas acopladas à idade da Pessoa vinculada.
-    /// </summary>
+    /// <summary>Entidade que representa uma movimentação financeira (Transação).</summary>
+
     public class Transacao
     {
         public Guid Id { get; private set; }

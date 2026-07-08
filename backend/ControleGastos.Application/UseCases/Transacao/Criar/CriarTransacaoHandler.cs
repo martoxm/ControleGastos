@@ -12,16 +12,10 @@ public class CriarTransacaoHandler(ITransacaoRepository transacaoRepository, IPe
 
     public async Task<CriarTransacaoResponse> ExecuteAsync(CriarTransacaoRequest request, CancellationToken cancellationToken = default)
     {
-        
         // O identificador da pessoa informada precisa existir no cadastro antes da criação da transação.
         var pessoa = await _pessoaRepository.ObterPorIdAsync(request.PessoaId, cancellationToken)
             ?? throw new NotFoundException("A pessoa informada para a transação não foi localizada no sistema.");
 
-        // O construtor da entidade Transacao valida internamente:
-        // - descrição obrigatória
-        // - valor maior que zero
-        // - tipo válido
-        // - bloqueio de Receita para menores de idade
         var novaTransacao = new Domain.Entities.Transacao(request.Descricao, request.Valor, request.Tipo, pessoa);
 
         await _transacaoRepository.AdicionarAsync(novaTransacao, cancellationToken);

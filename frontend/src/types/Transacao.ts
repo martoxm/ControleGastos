@@ -13,7 +13,7 @@ export interface CriarTransacaoRequest {
   descricao: string
   valor: number
   tipo: TipoTransacao
-  pessoaId: string // UUID da pessoa selecionada
+  pessoaId: string
 }
 
 // Retornado pelo GET /api/transacoes
@@ -21,6 +21,6 @@ export interface TransacaoResponse {
   id: string
   descricao: string
   valor: number
-  tipo: string // Backend retorna "Despesa" ou "Receita" como string
+  tipo: string
   pessoaId: string
 }

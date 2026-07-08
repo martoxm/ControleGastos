@@ -14,9 +14,7 @@ public class TotalPorPessoaResponse
     public decimal Saldo => TotalReceitas - TotalDespesas;
 }
 
-/// <summary>
-/// Relatório financeiro geral consolidando os totais de todas as pessoas do sistema.
-/// </summary>
+/// <summary> Relatório financeiro geral consolidando os totais de todas as pessoas do sistema.</summary>
 public class ObterTotaisResponse
 {
     public IEnumerable<TotalPorPessoaResponse> Pessoas { get; set; } = [];

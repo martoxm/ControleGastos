@@ -21,7 +21,7 @@ export const pessoaService = {
     return response.data
   },
 
-  // Regra do desafio: ao deletar uma pessoa, suas transações são apagadas pelo backend
+  // Ao deletar uma pessoa, suas transações são apagadas pelo backend
   deletar: async (id: string): Promise<void> => {
     await api.delete(`/pessoas/${id}`)
   },

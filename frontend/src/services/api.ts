@@ -1,5 +1,4 @@
 // Instância central do Axios — toda comunicação com o backend passa por aqui
-// Evita repetir baseURL em cada service (princípio DRY)
 
 import axios from "axios"
 

@@ -2,8 +2,8 @@
 
 namespace ControleGastos.Domain.Interfaces
 {
-    /// <summary>Contrato de repositório para a entidade Transacao.
-    /// Focado em criação, listagem e remoção em cascata.</summary>
+    /// <summary>Contrato de repositório para a entidade Transacao.</summary>
+
     public interface ITransacaoRepository
     {
         Task AdicionarAsync(Transacao transacao, CancellationToken cancellationToken = default);

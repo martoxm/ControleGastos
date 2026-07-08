@@ -1,7 +1,7 @@
 ﻿namespace ControleGastos.Application.UseCases.Transacao.Criar;
 
-/// <summary>Dados retornados após o registro bem-sucedido de uma transação.
-/// Expõe apenas as informações necessárias para o cliente da API.</summary>
+/// <summary>Dados retornados após o registro bem-sucedido de uma transação.</summary>
+
 public class CriarTransacaoResponse
 {
     public Guid Id { get; set; }

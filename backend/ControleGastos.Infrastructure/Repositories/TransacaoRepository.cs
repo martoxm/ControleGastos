@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Infrastructure.Repositories
 {
-    /// 
     ///<summary> Repositório responsável pela persistência da entidade Transacao.
     /// Implementa operações de cadastro, consulta e remoção por pessoa.</summary>
-    /// 
     public class TransacaoRepository(AppDbContext context) : ITransacaoRepository
     {
         private readonly AppDbContext _context = context;
@@ -26,9 +24,8 @@ namespace ControleGastos.Infrastructure.Repositories
 
         public async Task DeletarTransacoesDeUmaPessoaAsync(Guid pessoaId, CancellationToken cancellationToken = default)
         {
-            // Regra do teste: ao apagar uma pessoa, suas transações também devem ser removidas.
+            // Ao apagar uma pessoa, suas transações também devem ser removidas.
             // O cascade já cobre esse comportamento no banco, mas este método mantém uma proteção
-            // adicional caso a remoção seja executada por outro fluxo específico da aplicação.
             var transacoes = await _context.Transacoes
                                            .Where(t => t.PessoaId == pessoaId)
                                            .ToListAsync(cancellationToken);

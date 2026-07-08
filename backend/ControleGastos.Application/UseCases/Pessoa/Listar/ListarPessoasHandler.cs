@@ -2,8 +2,8 @@
 
 namespace ControleGastos.Application.UseCases.Pessoa.Listar;
 
-/// <summary>Caso de uso responsável por retornar todas as pessoas cadastradas no sistema.
-/// Mapeia as entidades de domínio para o response de exibição sem expor detalhes internos.</summary>
+/// <summary>Caso de uso responsável por retornar todas as pessoas cadastradas no sistema.</summary>
+
 public class ListarPessoasHandler(IPessoaRepository pessoaRepository) : IListarPessoasHandler
 {
     private readonly IPessoaRepository _pessoaRepository = pessoaRepository;
@@ -12,8 +12,7 @@ public class ListarPessoasHandler(IPessoaRepository pessoaRepository) : IListarP
     {
         var pessoas = await _pessoaRepository.ListarTodasAsync(cancellationToken);
 
-        // Mapeia cada entidade de domínio,
-        // evitando expor a entidade diretamente para a camada de apresentação.
+        // Mapeia cada entidade de domínio
         return pessoas.Select(p => new ListarPessoasResponse
         {
             Id = p.Id,

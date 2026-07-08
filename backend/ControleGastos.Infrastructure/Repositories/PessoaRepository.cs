@@ -5,10 +5,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ControleGastos.Infrastructure.Repositories
 {
-    /// 
     /// <summary>Repositório responsável pela persistência da entidade Pessoa.
     /// Implementa operações básicas de cadastro, consulta e remoção.</summary>
-    /// 
     public class PessoaRepository(AppDbContext context) : IPessoaRepository
     {
         private readonly AppDbContext _context = context;

@@ -1,5 +1,4 @@
 // Página de cadastro e listagem de transações
-//
 // Regra de negócio crítica do desafio:
 // → Pessoas menores de 18 anos só podem ter transações do tipo "Despesa"
 // → O frontend bloqueia a opção "Receita" e o backend também valida

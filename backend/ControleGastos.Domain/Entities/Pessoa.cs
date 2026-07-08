@@ -2,10 +2,7 @@
 
 namespace ControleGastos.Domain.Entities
 {
-    /// <summary>
-    /// Entidade que representa uma Pessoa no sistema.
-    /// Responsável por gerenciar dados básicos de identificação e regras de idade.
-    /// </summary>
+    /// <summary>Entidade que representa uma Pessoa no sistema.</summary>
     public class Pessoa
     {
         public Guid Id { get; private set; }

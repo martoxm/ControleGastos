@@ -5,23 +5,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddApplicationServices(builder.Configuration);
 
-builder.Services.AddControllers();// Controllers — suporte a rotas e endpoints REST
+builder.Services.AddControllers();
 
-builder.Services.AddSwagger();// Swagger — documentação interativa da API
+builder.Services.AddSwagger();
 
-builder.Services.AddCorsPolicy();// CORS — permite requisições do frontend React em desenvolvimento
+builder.Services.AddCorsPolicy();
 
-var app = builder.Build();// Build da aplicação e configuração do pipeline HTTP
+var app = builder.Build();
 
-app.ApplyMigrations();// Migrations automáticas — aplica pendências ao iniciar a aplicação
+app.ApplyMigrations();
 
-app.UseMiddleware<ExceptionHandlerMiddleware>();// Tratamento global de exceções não tratadas
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
-app.UseSwaggerDev();// Swagger — disponível apenas em ambiente de desenvolvimento
+app.UseSwaggerDev();
 
-// Pipeline HTTP — ordem importa:
-app.UseCorsPolicy(); // 1. CORS   → antes de qualquer lógica de rota
-app.UseAuthorization(); // 2. Auth   → autorização (preparado para expansão futura)
-app.MapControllers();// 3. Routes → mapeia os controllers
+app.UseCorsPolicy();
+app.UseAuthorization();
+app.MapControllers();
 
 app.Run();

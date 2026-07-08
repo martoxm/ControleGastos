@@ -16,7 +16,7 @@ export const transacaoService = {
     return response.data
   },
 
-  // Regra do desafio: se a pessoa for menor de 18, o backend rejeita receitas
+  // Se a pessoa for menor de 18, o backend rejeita receitas
   criar: async (dados: CriarTransacaoRequest): Promise<TransacaoResponse> => {
     const response = await api.post<TransacaoResponse>("/transacoes", dados)
     return response.data

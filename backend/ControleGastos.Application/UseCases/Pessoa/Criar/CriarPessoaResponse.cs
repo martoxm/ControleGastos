@@ -1,7 +1,7 @@
 ﻿namespace ControleGastos.Application.UseCases.Pessoa.Criar;
 
-/// <summary>Dados retornados após o cadastro bem-sucedido de uma pessoa.
-/// Expõe apenas as informações necessárias para o cliente da API.</summary>
+/// <summary>Dados retornados após o cadastro bem-sucedido de uma pessoa.</summary>
+
 public class CriarPessoaResponse
 {
     public Guid Id { get; set; }

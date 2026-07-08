@@ -2,10 +2,8 @@
 
 namespace ControleGastos.Application.UseCases.Transacao.Listar;
 
-/// <summary>
-/// Caso de uso responsável por retornar todas as transações registradas no sistema.
-/// Mapeia as entidades de domínio para o response de exibição sem expor detalhes internos.
-/// </summary>
+/// <summary>Caso de uso responsável por retornar todas as transações registradas no sistema.</summary>
+
 public class ListarTransacoesHandler(ITransacaoRepository transacaoRepository) : IListarTransacoesHandler
 {
     private readonly ITransacaoRepository _transacaoRepository = transacaoRepository;
@@ -14,8 +12,7 @@ public class ListarTransacoesHandler(ITransacaoRepository transacaoRepository) :
     {
         var transacoes = await _transacaoRepository.ListarTodasAsync(cancellationToken);
 
-        // Mapeia cada entidade de domínio para o DTO de exibição,
-        // evitando expor a entidade diretamente para a camada de apresentação.
+        // Mapeia cada entidade de domínio para o ListarTransacoesResponse
         return transacoes.Select(t => new ListarTransacoesResponse
         {
             Id = t.Id,

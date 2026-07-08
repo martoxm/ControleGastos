@@ -1,4 +1,3 @@
-// Baseado em RelatorioFinanceiroGeralDto e TotalPorPessoaDto do backend
 // Usado exclusivamente na página de Consulta de Totais
 
 export interface TotalPorPessoa {
@@ -7,7 +6,7 @@ export interface TotalPorPessoa {
   idade: number
   totalReceitas: number
   totalDespesas: number
-  saldo: number // Calculado pelo backend: totalReceitas - totalDespesas
+  saldo: number
 }
 
 export interface RelatorioFinanceiroGeral {
