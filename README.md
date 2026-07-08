@@ -37,10 +37,17 @@ Sistema web para controle de gastos residenciais com cadastro de pessoas, cadast
 > ⚠️ **Atenção:** o projeto possui dois servidores independentes — backend e frontend.
 > Ambos precisam estar rodando ao mesmo tempo para o sistema funcionar.
 
+### Clonando o repositório
+
+```bash
+git clone https://github.com/martoxm/ControleGastos.git
+cd ControleGastos
+```
+
 ### Pré-requisitos
 
 - [.NET 10 SDK](https://dotnet.microsoft.com/) — necessário para compilar e rodar o backend
-- [Node.js 20+](https://nodejs.org/) — necessário para rodar o frontend React. O `npm` (gerenciador de pacotes) já vem incluído na instalação do Node.js
+- [Node.js 20+](https://nodejs.org/) — necessário para rodar o frontend React. O `npm` já vem incluído na instalação do Node.js
 
 > 💡 Para verificar se já possui o Node.js instalado, execute `node -v` no terminal.
 > Para verificar o .NET, execute `dotnet --version`.
@@ -94,19 +101,18 @@ Ele abre o backend e o frontend automaticamente em janelas separadas.
 ## Estrutura do Projeto
 
 ```bash
-
 ControleGastos/
 ├── backend/
-│ ├── ControleGastos.API/ # Controllers e configuração da aplicação
-│ ├── ControleGastos.Application/ # DTOs, interfaces e serviços de aplicação
-│ ├── ControleGastos.Domain/ # Entidades, enums e regras de negócio
-│ └── ControleGastos.Infrastructure/ # Repositórios e contexto do banco de dados
+│ ├── ControleGastos.API/ # Controllers, middlewares e configuração da aplicação
+│ ├── ControleGastos.Application/ # Use Cases organizados por entidade e operação
+│ ├── ControleGastos.Domain/ # Entidades, enums, interfaces e exceções de domínio
+│ └── ControleGastos.Infrastructure/ # Repositórios, DbContext e Migrations
 └── frontend/
 └── src/
 ├── components/ # Componentes reutilizáveis (Navbar)
-├── pages/ # Telas da aplicação
-├── services/ # Comunicação com a API
-└── types/ # Tipagem TypeScript dos dados
+├── pages/ # Telas da aplicação (Pessoas, Transações, Totais)
+├── services/ # Comunicação com a API via Axios
+└── types/ # Interfaces TypeScript (Request e Response por entidade)
 ```
 
 ---
